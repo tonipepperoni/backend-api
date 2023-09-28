@@ -7,4 +7,6 @@ export interface AuthSession {
   rememberMe: boolean;
   expiresIn: number;
   rules: object[];
+  email: string;
+  username: string;
 }

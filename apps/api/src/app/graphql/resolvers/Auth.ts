@@ -47,6 +47,8 @@ export const typeDefs = gql`
     rememberMe: Boolean!
     expiresIn: Int!
     rules: [Json!]!
+    email: String!
+    username: String!
   }
 
   type GoogleProfile {
@@ -120,6 +122,8 @@ export class AuthResolver {
         id: true,
         roles: true,
         password: true,
+        email: true,
+        username: true
       },
     });
 

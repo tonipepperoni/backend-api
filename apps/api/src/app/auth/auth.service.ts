@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CaslFactory, JwtPayload, RequestUser } from '@zen/nest-auth';
 
 import { ConfigService } from '../config';
-import { AuthSession } from '../graphql/models/auth-session';
+import { AuthSession } from '../graphql/models';
 import { JwtService } from '../jwt';
 import { accessibleBy } from './casl/casl-prisma';
 import { AppAbility } from './casl/casl.factory';
@@ -17,7 +17,8 @@ export class AuthService {
     private readonly caslFactory: CaslFactory
   ) {}
 
-  async getAuthSession(user: RequestUser, rememberMe = false): Promise<AuthSession> {
+  // async getAuthSession(user: RequestUser, rememberMe = false): Promise<AuthSession> {
+  async getAuthSession(user: any, rememberMe = false): Promise<AuthSession> {
     const jwtPayload: JwtPayload = {
       aud: this.config.siteUrl,
       sub: user.id,
@@ -31,8 +32,9 @@ export class AuthService {
     const token = this.jwtService.sign(jwtPayload, { expiresIn });
 
     const ability = await this.createAbility(user);
-
     return {
+      username: user.username,
+      email: user.email as string,
       userId: user.id,
       roles: user.roles,
       rules: ability.rules,
