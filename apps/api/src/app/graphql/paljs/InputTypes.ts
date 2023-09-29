@@ -24,6 +24,16 @@ export default gql`
     googleProfile
   }
 
+  enum PostScalarFieldEnum {
+    id
+    title
+    content
+    published
+    createdAt
+    updatedAt
+    authorId
+  }
+
   enum SortOrder {
     asc
     desc
@@ -62,6 +72,7 @@ export default gql`
     roles: StringNullableListFilter
     googleId: StringNullableFilter
     googleProfile: JsonNullableFilter
+    Post: PostListRelationFilter
   }
 
   input UserOrderByWithRelationInput {
@@ -73,6 +84,7 @@ export default gql`
     roles: SortOrder
     googleId: SortOrderInput
     googleProfile: SortOrderInput
+    Post: PostOrderByRelationAggregateInput
   }
 
   input UserWhereUniqueInput {
@@ -87,6 +99,7 @@ export default gql`
     password: StringNullableFilter
     roles: StringNullableListFilter
     googleProfile: JsonNullableFilter
+    Post: PostListRelationFilter
   }
 
   input UserOrderByWithAggregationInput {
@@ -117,6 +130,71 @@ export default gql`
     googleProfile: JsonNullableWithAggregatesFilter
   }
 
+  input PostWhereInput {
+    AND: [PostWhereInput!]
+    OR: [PostWhereInput!]
+    NOT: [PostWhereInput!]
+    id: StringFilter
+    title: StringFilter
+    content: JsonNullableFilter
+    published: BoolFilter
+    createdAt: DateTimeFilter
+    updatedAt: DateTimeFilter
+    authorId: StringFilter
+    author: UserRelationFilter
+  }
+
+  input PostOrderByWithRelationInput {
+    id: SortOrder
+    title: SortOrder
+    content: SortOrderInput
+    published: SortOrder
+    createdAt: SortOrder
+    updatedAt: SortOrder
+    authorId: SortOrder
+    author: UserOrderByWithRelationInput
+  }
+
+  input PostWhereUniqueInput {
+    id: String
+    AND: [PostWhereInput!]
+    OR: [PostWhereInput!]
+    NOT: [PostWhereInput!]
+    title: StringFilter
+    content: JsonNullableFilter
+    published: BoolFilter
+    createdAt: DateTimeFilter
+    updatedAt: DateTimeFilter
+    authorId: StringFilter
+    author: UserRelationFilter
+  }
+
+  input PostOrderByWithAggregationInput {
+    id: SortOrder
+    title: SortOrder
+    content: SortOrderInput
+    published: SortOrder
+    createdAt: SortOrder
+    updatedAt: SortOrder
+    authorId: SortOrder
+    _count: PostCountOrderByAggregateInput
+    _max: PostMaxOrderByAggregateInput
+    _min: PostMinOrderByAggregateInput
+  }
+
+  input PostScalarWhereWithAggregatesInput {
+    AND: [PostScalarWhereWithAggregatesInput!]
+    OR: [PostScalarWhereWithAggregatesInput!]
+    NOT: [PostScalarWhereWithAggregatesInput!]
+    id: StringWithAggregatesFilter
+    title: StringWithAggregatesFilter
+    content: JsonNullableWithAggregatesFilter
+    published: BoolWithAggregatesFilter
+    createdAt: DateTimeWithAggregatesFilter
+    updatedAt: DateTimeWithAggregatesFilter
+    authorId: StringWithAggregatesFilter
+  }
+
   input UserCreateInput {
     id: String
     createdAt: DateTime
@@ -126,6 +204,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    Post: PostCreateNestedManyWithoutAuthorInput
   }
 
   input UserUncheckedCreateInput {
@@ -137,6 +216,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    Post: PostUncheckedCreateNestedManyWithoutAuthorInput
   }
 
   input UserUpdateInput {
@@ -148,6 +228,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    Post: PostUpdateManyWithoutAuthorNestedInput
   }
 
   input UserUncheckedUpdateInput {
@@ -159,6 +240,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    Post: PostUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
   input UserCreateManyInput {
@@ -192,6 +274,75 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+  }
+
+  input PostCreateInput {
+    id: String
+    title: String!
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+    author: UserCreateNestedOneWithoutPostInput!
+  }
+
+  input PostUncheckedCreateInput {
+    id: String
+    title: String!
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+    authorId: String!
+  }
+
+  input PostUpdateInput {
+    id: String
+    title: String
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+    author: UserUpdateOneRequiredWithoutPostNestedInput
+  }
+
+  input PostUncheckedUpdateInput {
+    id: String
+    title: String
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+    authorId: String
+  }
+
+  input PostCreateManyInput {
+    id: String
+    title: String!
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+    authorId: String!
+  }
+
+  input PostUpdateManyMutationInput {
+    id: String
+    title: String
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
+  input PostUncheckedUpdateManyInput {
+    id: String
+    title: String
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+    authorId: String
   }
 
   input StringFilter {
@@ -259,9 +410,19 @@ export default gql`
     not: Json
   }
 
+  input PostListRelationFilter {
+    every: PostWhereInput
+    some: PostWhereInput
+    none: PostWhereInput
+  }
+
   input SortOrderInput {
     sort: SortOrder!
     nulls: NullsOrder
+  }
+
+  input PostOrderByRelationAggregateInput {
+    _count: SortOrder
   }
 
   input UserCountOrderByAggregateInput {
@@ -362,8 +523,68 @@ export default gql`
     _max: NestedJsonNullableFilter
   }
 
+  input BoolFilter {
+    equals: Boolean
+    not: NestedBoolFilter
+  }
+
+  input UserRelationFilter {
+    is: UserWhereInput
+    isNot: UserWhereInput
+  }
+
+  input PostCountOrderByAggregateInput {
+    id: SortOrder
+    title: SortOrder
+    content: SortOrder
+    published: SortOrder
+    createdAt: SortOrder
+    updatedAt: SortOrder
+    authorId: SortOrder
+  }
+
+  input PostMaxOrderByAggregateInput {
+    id: SortOrder
+    title: SortOrder
+    published: SortOrder
+    createdAt: SortOrder
+    updatedAt: SortOrder
+    authorId: SortOrder
+  }
+
+  input PostMinOrderByAggregateInput {
+    id: SortOrder
+    title: SortOrder
+    published: SortOrder
+    createdAt: SortOrder
+    updatedAt: SortOrder
+    authorId: SortOrder
+  }
+
+  input BoolWithAggregatesFilter {
+    equals: Boolean
+    not: NestedBoolWithAggregatesFilter
+    _count: NestedIntFilter
+    _min: NestedBoolFilter
+    _max: NestedBoolFilter
+  }
+
   input UserCreaterolesInput {
     set: [String!]!
+  }
+
+  input PostCreateNestedManyWithoutAuthorInput {
+    create: [PostCreateWithoutAuthorInput!]
+    connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+    createMany: PostCreateManyAuthorInputEnvelope
+    connect: [PostWhereUniqueInput!]
+  }
+
+  input PostUncheckedCreateNestedManyWithoutAuthorInput {
+    create: [PostCreateWithoutAuthorInput!]
+    connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+    createMany: PostCreateManyAuthorInputEnvelope
+    connect: [PostWhereUniqueInput!]
   }
 
   input StringFieldUpdateOperationsInput {
@@ -381,6 +602,52 @@ export default gql`
   input UserUpdaterolesInput {
     set: [String!]
     push: [String!]
+  }
+
+  input PostUpdateManyWithoutAuthorNestedInput {
+    create: [PostCreateWithoutAuthorInput!]
+    connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+    upsert: [PostUpsertWithWhereUniqueWithoutAuthorInput!]
+    createMany: PostCreateManyAuthorInputEnvelope
+    set: [PostWhereUniqueInput!]
+    disconnect: [PostWhereUniqueInput!]
+    delete: [PostWhereUniqueInput!]
+    connect: [PostWhereUniqueInput!]
+    update: [PostUpdateWithWhereUniqueWithoutAuthorInput!]
+    updateMany: [PostUpdateManyWithWhereWithoutAuthorInput!]
+    deleteMany: [PostScalarWhereInput!]
+  }
+
+  input PostUncheckedUpdateManyWithoutAuthorNestedInput {
+    create: [PostCreateWithoutAuthorInput!]
+    connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+    upsert: [PostUpsertWithWhereUniqueWithoutAuthorInput!]
+    createMany: PostCreateManyAuthorInputEnvelope
+    set: [PostWhereUniqueInput!]
+    disconnect: [PostWhereUniqueInput!]
+    delete: [PostWhereUniqueInput!]
+    connect: [PostWhereUniqueInput!]
+    update: [PostUpdateWithWhereUniqueWithoutAuthorInput!]
+    updateMany: [PostUpdateManyWithWhereWithoutAuthorInput!]
+    deleteMany: [PostScalarWhereInput!]
+  }
+
+  input UserCreateNestedOneWithoutPostInput {
+    create: UserCreateWithoutPostInput
+    connectOrCreate: UserCreateOrConnectWithoutPostInput
+    connect: UserWhereUniqueInput
+  }
+
+  input BoolFieldUpdateOperationsInput {
+    set: Boolean
+  }
+
+  input UserUpdateOneRequiredWithoutPostNestedInput {
+    create: UserCreateWithoutPostInput
+    connectOrCreate: UserCreateOrConnectWithoutPostInput
+    upsert: UserUpsertWithoutPostInput
+    connect: UserWhereUniqueInput
+    update: UserUpdateToOneWithWhereWithoutPostInput
   }
 
   input NestedStringFilter {
@@ -508,10 +775,186 @@ export default gql`
     not: Json
   }
 
+  input NestedBoolFilter {
+    equals: Boolean
+    not: NestedBoolFilter
+  }
+
+  input NestedBoolWithAggregatesFilter {
+    equals: Boolean
+    not: NestedBoolWithAggregatesFilter
+    _count: NestedIntFilter
+    _min: NestedBoolFilter
+    _max: NestedBoolFilter
+  }
+
+  input PostCreateWithoutAuthorInput {
+    id: String
+    title: String!
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
+  input PostUncheckedCreateWithoutAuthorInput {
+    id: String
+    title: String!
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
+  input PostCreateOrConnectWithoutAuthorInput {
+    where: PostWhereUniqueInput!
+    create: PostCreateWithoutAuthorInput!
+  }
+
+  input PostCreateManyAuthorInputEnvelope {
+    data: [PostCreateManyAuthorInput!]!
+    skipDuplicates: Boolean
+  }
+
+  input PostUpsertWithWhereUniqueWithoutAuthorInput {
+    where: PostWhereUniqueInput!
+    update: PostUpdateWithoutAuthorInput!
+    create: PostCreateWithoutAuthorInput!
+  }
+
+  input PostUpdateWithWhereUniqueWithoutAuthorInput {
+    where: PostWhereUniqueInput!
+    data: PostUpdateWithoutAuthorInput!
+  }
+
+  input PostUpdateManyWithWhereWithoutAuthorInput {
+    where: PostScalarWhereInput!
+    data: PostUpdateManyMutationInput!
+  }
+
+  input PostScalarWhereInput {
+    AND: [PostScalarWhereInput!]
+    OR: [PostScalarWhereInput!]
+    NOT: [PostScalarWhereInput!]
+    id: StringFilter
+    title: StringFilter
+    content: JsonNullableFilter
+    published: BoolFilter
+    createdAt: DateTimeFilter
+    updatedAt: DateTimeFilter
+    authorId: StringFilter
+  }
+
+  input UserCreateWithoutPostInput {
+    id: String
+    createdAt: DateTime
+    username: String
+    password: String
+    email: String!
+    roles: [String!]
+    googleId: String
+    googleProfile: Json
+  }
+
+  input UserUncheckedCreateWithoutPostInput {
+    id: String
+    createdAt: DateTime
+    username: String
+    password: String
+    email: String!
+    roles: [String!]
+    googleId: String
+    googleProfile: Json
+  }
+
+  input UserCreateOrConnectWithoutPostInput {
+    where: UserWhereUniqueInput!
+    create: UserCreateWithoutPostInput!
+  }
+
+  input UserUpsertWithoutPostInput {
+    update: UserUpdateWithoutPostInput!
+    create: UserCreateWithoutPostInput!
+    where: UserWhereInput
+  }
+
+  input UserUpdateToOneWithWhereWithoutPostInput {
+    where: UserWhereInput
+    data: UserUpdateWithoutPostInput!
+  }
+
+  input UserUpdateWithoutPostInput {
+    id: String
+    createdAt: DateTime
+    username: String
+    password: String
+    email: String
+    roles: [String!]
+    googleId: String
+    googleProfile: Json
+  }
+
+  input UserUncheckedUpdateWithoutPostInput {
+    id: String
+    createdAt: DateTime
+    username: String
+    password: String
+    email: String
+    roles: [String!]
+    googleId: String
+    googleProfile: Json
+  }
+
+  input PostCreateManyAuthorInput {
+    id: String
+    title: String!
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
+  input PostUpdateWithoutAuthorInput {
+    id: String
+    title: String
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
+  input PostUncheckedUpdateWithoutAuthorInput {
+    id: String
+    title: String
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
+  input PostUncheckedUpdateManyWithoutAuthorInput {
+    id: String
+    title: String
+    content: Json
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
   type AggregateUser {
     _count: UserCountAggregateOutputType
     _min: UserMinAggregateOutputType
     _max: UserMaxAggregateOutputType
+  }
+
+  type AggregatePost {
+    _count: PostCountAggregateOutputType
+    _min: PostMinAggregateOutputType
+    _max: PostMaxAggregateOutputType
+  }
+
+  type UserCountOutputType {
+    Post: Int!
   }
 
   type UserCountAggregateOutputType {
@@ -542,5 +985,34 @@ export default gql`
     password: String
     email: String
     googleId: String
+  }
+
+  type PostCountAggregateOutputType {
+    id: Int!
+    title: Int!
+    content: Int!
+    published: Int!
+    createdAt: Int!
+    updatedAt: Int!
+    authorId: Int!
+    _all: Int!
+  }
+
+  type PostMinAggregateOutputType {
+    id: String
+    title: String
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+    authorId: String
+  }
+
+  type PostMaxAggregateOutputType {
+    id: String
+    title: String
+    published: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+    authorId: String
   }
 `;

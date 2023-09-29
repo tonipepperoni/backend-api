@@ -123,7 +123,7 @@ export class AuthResolver {
         roles: true,
         password: true,
         email: true,
-        username: true
+        username: true,
       },
     });
 

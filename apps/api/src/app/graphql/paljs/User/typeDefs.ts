@@ -10,6 +10,15 @@ export default gql`
     roles: [String!]!
     googleId: String
     googleProfile: Json
+    Post(
+      where: PostWhereInput
+      orderBy: [PostOrderByWithRelationInput]
+      cursor: PostWhereUniqueInput
+      take: Int
+      skip: Int
+      distinct: [PostScalarFieldEnum]
+    ): [Post!]!
+    _count: UserCountOutputType!
   }
 
   type Query {

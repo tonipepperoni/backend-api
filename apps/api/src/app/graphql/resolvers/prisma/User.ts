@@ -87,6 +87,7 @@ export class UserResolver {
     @Args() args: NonNullableFields<UpdateOneUserArgs>,
     @Info() info: GraphQLResolveInfo
   ) {
+    console.log('updateOneUser', args);
     return this.prisma.user.update(this.prismaSelect.getArgs(info, args));
   }
 

@@ -24,14 +24,21 @@ export type Resolvers = {
   [key: string]: { [key: string]: Resolver<any, any, any> };
 } & {
   User?: User;
+  Post?: Post;
   Query?: Query;
   Mutation?: Mutation;
   AggregateUser?: AggregateUser;
   UserGroupByOutputType?: UserGroupByOutputType;
+  AggregatePost?: AggregatePost;
+  PostGroupByOutputType?: PostGroupByOutputType;
   AffectedRowsOutput?: AffectedRowsOutput;
+  UserCountOutputType?: UserCountOutputType;
   UserCountAggregateOutputType?: UserCountAggregateOutputType;
   UserMinAggregateOutputType?: UserMinAggregateOutputType;
   UserMaxAggregateOutputType?: UserMaxAggregateOutputType;
+  PostCountAggregateOutputType?: PostCountAggregateOutputType;
+  PostMinAggregateOutputType?: PostMinAggregateOutputType;
+  PostMaxAggregateOutputType?: PostMaxAggregateOutputType;
 };
 
 export type User = { [key: string]: Resolver<any, any, any> } & {
@@ -43,6 +50,19 @@ export type User = { [key: string]: Resolver<any, any, any> } & {
   roles?: Resolver<Client.User, {}, string[] | null>;
   googleId?: Resolver<Client.User, {}, string | null>;
   googleProfile?: Resolver<Client.User, {}, any | null>;
+  Post?: Resolver<Client.User, UserPostArgs, Client.Post[] | null>;
+  _count?: Resolver<Client.User, {}, Client.Prisma.UserCountOutputType>;
+};
+
+export type Post = { [key: string]: Resolver<any, any, any> } & {
+  id?: Resolver<Client.Post, {}, string>;
+  title?: Resolver<Client.Post, {}, string>;
+  content?: Resolver<Client.Post, {}, any | null>;
+  published?: Resolver<Client.Post, {}, boolean>;
+  createdAt?: Resolver<Client.Post, {}, Date>;
+  updatedAt?: Resolver<Client.Post, {}, Date>;
+  authorId?: Resolver<Client.Post, {}, string>;
+  author?: Resolver<Client.Post, {}, Client.User>;
 };
 
 export type Query = { [key: string]: Resolver<any, any, any> } & {
@@ -58,6 +78,18 @@ export type Query = { [key: string]: Resolver<any, any, any> } & {
   groupByUser?: Resolver<{}, GroupByUserArgs, Client.Prisma.UserGroupByOutputType[]>;
   findUniqueUser?: Resolver<{}, FindUniqueUserArgs, Client.User | null>;
   findUniqueUserOrThrow?: Resolver<{}, FindUniqueUserOrThrowArgs, Client.User | null>;
+  findFirstPost?: Resolver<{}, FindFirstPostArgs, Client.Post | null>;
+  findFirstPostOrThrow?: Resolver<{}, FindFirstPostOrThrowArgs, Client.Post | null>;
+  findManyPost?: Resolver<{}, FindManyPostArgs, Client.Post[]>;
+  findManyPostCount?: Resolver<{}, FindManyPostArgs, number>;
+  aggregatePost?: Resolver<
+    {},
+    AggregatePostArgs,
+    Client.Prisma.GetPostAggregateType<AggregatePostArgs>
+  >;
+  groupByPost?: Resolver<{}, GroupByPostArgs, Client.Prisma.PostGroupByOutputType[]>;
+  findUniquePost?: Resolver<{}, FindUniquePostArgs, Client.Post | null>;
+  findUniquePostOrThrow?: Resolver<{}, FindUniquePostOrThrowArgs, Client.Post | null>;
 };
 
 export type Mutation = { [key: string]: Resolver<any, any, any> } & {
@@ -68,6 +100,13 @@ export type Mutation = { [key: string]: Resolver<any, any, any> } & {
   updateOneUser?: Resolver<{}, UpdateOneUserArgs, Client.User | null>;
   updateManyUser?: Resolver<{}, UpdateManyUserArgs, Client.Prisma.BatchPayload>;
   deleteManyUser?: Resolver<{}, DeleteManyUserArgs, Client.Prisma.BatchPayload>;
+  createOnePost?: Resolver<{}, CreateOnePostArgs, Client.Post>;
+  upsertOnePost?: Resolver<{}, UpsertOnePostArgs, Client.Post>;
+  createManyPost?: Resolver<{}, CreateManyPostArgs, Client.Prisma.BatchPayload>;
+  deleteOnePost?: Resolver<{}, DeleteOnePostArgs, Client.Post | null>;
+  updateOnePost?: Resolver<{}, UpdateOnePostArgs, Client.Post | null>;
+  updateManyPost?: Resolver<{}, UpdateManyPostArgs, Client.Prisma.BatchPayload>;
+  deleteManyPost?: Resolver<{}, DeleteManyPostArgs, Client.Prisma.BatchPayload>;
   executeRaw?: Resolver<{}, ExecuteRawArgs, any>;
   queryRaw?: Resolver<{}, QueryRawArgs, any>;
 };
@@ -110,8 +149,49 @@ export type UserGroupByOutputType = {
   >;
 };
 
+export type AggregatePost = { [key: string]: Resolver<any, any, any> } & {
+  _count?: Resolver<
+    Client.Prisma.AggregatePost,
+    {},
+    Client.Prisma.PostCountAggregateOutputType | null
+  >;
+  _min?: Resolver<Client.Prisma.AggregatePost, {}, Client.Prisma.PostMinAggregateOutputType | null>;
+  _max?: Resolver<Client.Prisma.AggregatePost, {}, Client.Prisma.PostMaxAggregateOutputType | null>;
+};
+
+export type PostGroupByOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.PostGroupByOutputType, {}, string>;
+  title?: Resolver<Client.Prisma.PostGroupByOutputType, {}, string>;
+  content?: Resolver<Client.Prisma.PostGroupByOutputType, {}, any | null>;
+  published?: Resolver<Client.Prisma.PostGroupByOutputType, {}, boolean>;
+  createdAt?: Resolver<Client.Prisma.PostGroupByOutputType, {}, Date>;
+  updatedAt?: Resolver<Client.Prisma.PostGroupByOutputType, {}, Date>;
+  authorId?: Resolver<Client.Prisma.PostGroupByOutputType, {}, string>;
+  _count?: Resolver<
+    Client.Prisma.PostGroupByOutputType,
+    {},
+    Client.Prisma.PostCountAggregateOutputType | null
+  >;
+  _min?: Resolver<
+    Client.Prisma.PostGroupByOutputType,
+    {},
+    Client.Prisma.PostMinAggregateOutputType | null
+  >;
+  _max?: Resolver<
+    Client.Prisma.PostGroupByOutputType,
+    {},
+    Client.Prisma.PostMaxAggregateOutputType | null
+  >;
+};
+
 export type AffectedRowsOutput = { [key: string]: Resolver<any, any, any> } & {
   count?: Resolver<Client.Prisma.BatchPayload, {}, number>;
+};
+
+export type UserCountOutputType = { [key: string]: Resolver<any, any, any> } & {
+  Post?: Resolver<Client.Prisma.UserCountOutputType, UserCountOutputTypePostArgs, number>;
 };
 
 export type UserCountAggregateOutputType = {
@@ -148,6 +228,50 @@ export type UserMaxAggregateOutputType = {
   password?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   email?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   googleId?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
+};
+
+export type PostCountAggregateOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  title?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  content?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  published?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  createdAt?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  updatedAt?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  authorId?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  _all?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+};
+
+export type PostMinAggregateOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, string | null>;
+  title?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, string | null>;
+  published?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, boolean | null>;
+  createdAt?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, Date | null>;
+  updatedAt?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, Date | null>;
+  authorId?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, string | null>;
+};
+
+export type PostMaxAggregateOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, string | null>;
+  title?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, string | null>;
+  published?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, boolean | null>;
+  createdAt?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, Date | null>;
+  updatedAt?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, Date | null>;
+  authorId?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, string | null>;
+};
+
+export type UserPostArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithRelationInput[];
+  cursor?: PostWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: PostScalarFieldEnum[];
 };
 
 export type FindFirstUserArgs = {
@@ -205,6 +329,61 @@ export type FindUniqueUserOrThrowArgs = {
   where: UserWhereUniqueInput;
 };
 
+export type FindFirstPostArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithRelationInput[];
+  cursor?: PostWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: PostScalarFieldEnum[];
+};
+
+export type FindFirstPostOrThrowArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithRelationInput[];
+  cursor?: PostWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: PostScalarFieldEnum[];
+};
+
+export type FindManyPostArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithRelationInput[];
+  cursor?: PostWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: PostScalarFieldEnum[];
+};
+
+export type AggregatePostArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithRelationInput[];
+  cursor?: PostWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  _count?: Client.Prisma.PostCountAggregateInputType;
+  _min?: Client.Prisma.PostMinAggregateInputType;
+  _max?: Client.Prisma.PostMaxAggregateInputType;
+};
+
+export type GroupByPostArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithAggregationInput[];
+  by: PostScalarFieldEnum[];
+  having?: PostScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+};
+
+export type FindUniquePostArgs = {
+  where: PostWhereUniqueInput;
+};
+
+export type FindUniquePostOrThrowArgs = {
+  where: PostWhereUniqueInput;
+};
+
 export type CreateOneUserArgs = {
   data: UserCreateInput;
 };
@@ -238,6 +417,39 @@ export type DeleteManyUserArgs = {
   where?: UserWhereInput;
 };
 
+export type CreateOnePostArgs = {
+  data: PostCreateInput;
+};
+
+export type UpsertOnePostArgs = {
+  where: PostWhereUniqueInput;
+  create: PostCreateInput;
+  update: PostUpdateInput;
+};
+
+export type CreateManyPostArgs = {
+  data: PostCreateManyInput[];
+  skipDuplicates?: boolean;
+};
+
+export type DeleteOnePostArgs = {
+  where: PostWhereUniqueInput;
+};
+
+export type UpdateOnePostArgs = {
+  data: PostUpdateInput;
+  where: PostWhereUniqueInput;
+};
+
+export type UpdateManyPostArgs = {
+  data: PostUpdateManyMutationInput;
+  where?: PostWhereInput;
+};
+
+export type DeleteManyPostArgs = {
+  where?: PostWhereInput;
+};
+
 export type ExecuteRawArgs = {
   query: string;
   parameters?: any;
@@ -246,6 +458,10 @@ export type ExecuteRawArgs = {
 export type QueryRawArgs = {
   query: string;
   parameters?: any;
+};
+
+export type UserCountOutputTypePostArgs = {
+  where?: PostWhereInput;
 };
 
 export type UserWhereInput = {
@@ -260,6 +476,7 @@ export type UserWhereInput = {
   roles?: StringNullableListFilter;
   googleId?: StringNullableFilter | null;
   googleProfile?: JsonNullableFilter;
+  Post?: PostListRelationFilter;
 };
 
 export type UserOrderByWithRelationInput = {
@@ -271,6 +488,7 @@ export type UserOrderByWithRelationInput = {
   roles?: SortOrder;
   googleId?: SortOrderInput;
   googleProfile?: SortOrderInput;
+  Post?: PostOrderByRelationAggregateInput;
 };
 
 export type UserWhereUniqueInput = AtLeast<
@@ -286,6 +504,7 @@ export type UserWhereUniqueInput = AtLeast<
     password?: StringNullableFilter | null;
     roles?: StringNullableListFilter;
     googleProfile?: JsonNullableFilter;
+    Post?: PostListRelationFilter;
   },
   'id' | 'username' | 'email' | 'googleId'
 >;
@@ -318,6 +537,74 @@ export type UserScalarWhereWithAggregatesInput = {
   googleProfile?: JsonNullableWithAggregatesFilter;
 };
 
+export type PostWhereInput = {
+  AND?: PostWhereInput[];
+  OR?: PostWhereInput[];
+  NOT?: PostWhereInput[];
+  id?: StringFilter;
+  title?: StringFilter;
+  content?: JsonNullableFilter;
+  published?: BoolFilter;
+  createdAt?: DateTimeFilter;
+  updatedAt?: DateTimeFilter;
+  authorId?: StringFilter;
+  author?: UserRelationFilter;
+};
+
+export type PostOrderByWithRelationInput = {
+  id?: SortOrder;
+  title?: SortOrder;
+  content?: SortOrderInput;
+  published?: SortOrder;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+  author?: UserOrderByWithRelationInput;
+};
+
+export type PostWhereUniqueInput = AtLeast<
+  {
+    id?: string;
+    AND?: PostWhereInput[];
+    OR?: PostWhereInput[];
+    NOT?: PostWhereInput[];
+    title?: StringFilter;
+    content?: JsonNullableFilter;
+    published?: BoolFilter;
+    createdAt?: DateTimeFilter;
+    updatedAt?: DateTimeFilter;
+    authorId?: StringFilter;
+    author?: UserRelationFilter;
+  },
+  'id'
+>;
+
+export type PostOrderByWithAggregationInput = {
+  id?: SortOrder;
+  title?: SortOrder;
+  content?: SortOrderInput;
+  published?: SortOrder;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+  _count?: PostCountOrderByAggregateInput;
+  _max?: PostMaxOrderByAggregateInput;
+  _min?: PostMinOrderByAggregateInput;
+};
+
+export type PostScalarWhereWithAggregatesInput = {
+  AND?: PostScalarWhereWithAggregatesInput[];
+  OR?: PostScalarWhereWithAggregatesInput[];
+  NOT?: PostScalarWhereWithAggregatesInput[];
+  id?: StringWithAggregatesFilter;
+  title?: StringWithAggregatesFilter;
+  content?: JsonNullableWithAggregatesFilter;
+  published?: BoolWithAggregatesFilter;
+  createdAt?: DateTimeWithAggregatesFilter;
+  updatedAt?: DateTimeWithAggregatesFilter;
+  authorId?: StringWithAggregatesFilter;
+};
+
 export type UserCreateInput = {
   id?: string;
   createdAt?: Date;
@@ -327,6 +614,7 @@ export type UserCreateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  Post?: PostCreateNestedManyWithoutAuthorInput;
 };
 
 export type UserUncheckedCreateInput = {
@@ -338,6 +626,7 @@ export type UserUncheckedCreateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  Post?: PostUncheckedCreateNestedManyWithoutAuthorInput;
 };
 
 export type UserUpdateInput = {
@@ -349,6 +638,7 @@ export type UserUpdateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  Post?: PostUpdateManyWithoutAuthorNestedInput;
 };
 
 export type UserUncheckedUpdateInput = {
@@ -360,6 +650,7 @@ export type UserUncheckedUpdateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  Post?: PostUncheckedUpdateManyWithoutAuthorNestedInput;
 };
 
 export type UserCreateManyInput = {
@@ -393,6 +684,75 @@ export type UserUncheckedUpdateManyInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+};
+
+export type PostCreateInput = {
+  id?: string;
+  title: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  author: UserCreateNestedOneWithoutPostInput;
+};
+
+export type PostUncheckedCreateInput = {
+  id?: string;
+  title: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId: string;
+};
+
+export type PostUpdateInput = {
+  id?: string;
+  title?: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  author?: UserUpdateOneRequiredWithoutPostNestedInput;
+};
+
+export type PostUncheckedUpdateInput = {
+  id?: string;
+  title?: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId?: string;
+};
+
+export type PostCreateManyInput = {
+  id?: string;
+  title: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId: string;
+};
+
+export type PostUpdateManyMutationInput = {
+  id?: string;
+  title?: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+export type PostUncheckedUpdateManyInput = {
+  id?: string;
+  title?: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId?: string;
 };
 
 export type StringFilter = {
@@ -460,9 +820,19 @@ export type JsonNullableFilter = {
   not?: any;
 };
 
+export type PostListRelationFilter = {
+  every?: PostWhereInput;
+  some?: PostWhereInput;
+  none?: PostWhereInput;
+};
+
 export type SortOrderInput = {
   sort: SortOrder;
   nulls?: NullsOrder;
+};
+
+export type PostOrderByRelationAggregateInput = {
+  _count?: SortOrder;
 };
 
 export type UserCountOrderByAggregateInput = {
@@ -563,8 +933,68 @@ export type JsonNullableWithAggregatesFilter = {
   _max?: NestedJsonNullableFilter;
 };
 
+export type BoolFilter = {
+  equals?: boolean;
+  not?: NestedBoolFilter;
+};
+
+export type UserRelationFilter = {
+  is?: UserWhereInput;
+  isNot?: UserWhereInput;
+};
+
+export type PostCountOrderByAggregateInput = {
+  id?: SortOrder;
+  title?: SortOrder;
+  content?: SortOrder;
+  published?: SortOrder;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+};
+
+export type PostMaxOrderByAggregateInput = {
+  id?: SortOrder;
+  title?: SortOrder;
+  published?: SortOrder;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+};
+
+export type PostMinOrderByAggregateInput = {
+  id?: SortOrder;
+  title?: SortOrder;
+  published?: SortOrder;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+};
+
+export type BoolWithAggregatesFilter = {
+  equals?: boolean;
+  not?: NestedBoolWithAggregatesFilter;
+  _count?: NestedIntFilter;
+  _min?: NestedBoolFilter;
+  _max?: NestedBoolFilter;
+};
+
 export type UserCreaterolesInput = {
   set: string[];
+};
+
+export type PostCreateNestedManyWithoutAuthorInput = {
+  create?: PostCreateWithoutAuthorInput[];
+  connectOrCreate?: PostCreateOrConnectWithoutAuthorInput[];
+  createMany?: PostCreateManyAuthorInputEnvelope;
+  connect?: PostWhereUniqueInput[];
+};
+
+export type PostUncheckedCreateNestedManyWithoutAuthorInput = {
+  create?: PostCreateWithoutAuthorInput[];
+  connectOrCreate?: PostCreateOrConnectWithoutAuthorInput[];
+  createMany?: PostCreateManyAuthorInputEnvelope;
+  connect?: PostWhereUniqueInput[];
 };
 
 export type StringFieldUpdateOperationsInput = {
@@ -582,6 +1012,52 @@ export type NullableStringFieldUpdateOperationsInput = {
 export type UserUpdaterolesInput = {
   set?: string[];
   push?: string[];
+};
+
+export type PostUpdateManyWithoutAuthorNestedInput = {
+  create?: PostCreateWithoutAuthorInput[];
+  connectOrCreate?: PostCreateOrConnectWithoutAuthorInput[];
+  upsert?: PostUpsertWithWhereUniqueWithoutAuthorInput[];
+  createMany?: PostCreateManyAuthorInputEnvelope;
+  set?: PostWhereUniqueInput[];
+  disconnect?: PostWhereUniqueInput[];
+  delete?: PostWhereUniqueInput[];
+  connect?: PostWhereUniqueInput[];
+  update?: PostUpdateWithWhereUniqueWithoutAuthorInput[];
+  updateMany?: PostUpdateManyWithWhereWithoutAuthorInput[];
+  deleteMany?: PostScalarWhereInput[];
+};
+
+export type PostUncheckedUpdateManyWithoutAuthorNestedInput = {
+  create?: PostCreateWithoutAuthorInput[];
+  connectOrCreate?: PostCreateOrConnectWithoutAuthorInput[];
+  upsert?: PostUpsertWithWhereUniqueWithoutAuthorInput[];
+  createMany?: PostCreateManyAuthorInputEnvelope;
+  set?: PostWhereUniqueInput[];
+  disconnect?: PostWhereUniqueInput[];
+  delete?: PostWhereUniqueInput[];
+  connect?: PostWhereUniqueInput[];
+  update?: PostUpdateWithWhereUniqueWithoutAuthorInput[];
+  updateMany?: PostUpdateManyWithWhereWithoutAuthorInput[];
+  deleteMany?: PostScalarWhereInput[];
+};
+
+export type UserCreateNestedOneWithoutPostInput = {
+  create?: UserCreateWithoutPostInput;
+  connectOrCreate?: UserCreateOrConnectWithoutPostInput;
+  connect?: UserWhereUniqueInput;
+};
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean;
+};
+
+export type UserUpdateOneRequiredWithoutPostNestedInput = {
+  create?: UserCreateWithoutPostInput;
+  connectOrCreate?: UserCreateOrConnectWithoutPostInput;
+  upsert?: UserUpsertWithoutPostInput;
+  connect?: UserWhereUniqueInput;
+  update?: UserUpdateToOneWithWhereWithoutPostInput;
 };
 
 export type NestedStringFilter = {
@@ -709,6 +1185,172 @@ export type NestedJsonNullableFilter = {
   not?: any;
 };
 
+export type NestedBoolFilter = {
+  equals?: boolean;
+  not?: NestedBoolFilter;
+};
+
+export type NestedBoolWithAggregatesFilter = {
+  equals?: boolean;
+  not?: NestedBoolWithAggregatesFilter;
+  _count?: NestedIntFilter;
+  _min?: NestedBoolFilter;
+  _max?: NestedBoolFilter;
+};
+
+export type PostCreateWithoutAuthorInput = {
+  id?: string;
+  title: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+export type PostUncheckedCreateWithoutAuthorInput = {
+  id?: string;
+  title: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+export type PostCreateOrConnectWithoutAuthorInput = {
+  where: PostWhereUniqueInput;
+  create: PostCreateWithoutAuthorInput;
+};
+
+export type PostCreateManyAuthorInputEnvelope = {
+  data: PostCreateManyAuthorInput[];
+  skipDuplicates?: boolean;
+};
+
+export type PostUpsertWithWhereUniqueWithoutAuthorInput = {
+  where: PostWhereUniqueInput;
+  update: PostUpdateWithoutAuthorInput;
+  create: PostCreateWithoutAuthorInput;
+};
+
+export type PostUpdateWithWhereUniqueWithoutAuthorInput = {
+  where: PostWhereUniqueInput;
+  data: PostUpdateWithoutAuthorInput;
+};
+
+export type PostUpdateManyWithWhereWithoutAuthorInput = {
+  where: PostScalarWhereInput;
+  data: PostUpdateManyMutationInput;
+};
+
+export type PostScalarWhereInput = {
+  AND?: PostScalarWhereInput[];
+  OR?: PostScalarWhereInput[];
+  NOT?: PostScalarWhereInput[];
+  id?: StringFilter;
+  title?: StringFilter;
+  content?: JsonNullableFilter;
+  published?: BoolFilter;
+  createdAt?: DateTimeFilter;
+  updatedAt?: DateTimeFilter;
+  authorId?: StringFilter;
+};
+
+export type UserCreateWithoutPostInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+};
+
+export type UserUncheckedCreateWithoutPostInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+};
+
+export type UserCreateOrConnectWithoutPostInput = {
+  where: UserWhereUniqueInput;
+  create: UserCreateWithoutPostInput;
+};
+
+export type UserUpsertWithoutPostInput = {
+  update: UserUpdateWithoutPostInput;
+  create: UserCreateWithoutPostInput;
+  where?: UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutPostInput = {
+  where?: UserWhereInput;
+  data: UserUpdateWithoutPostInput;
+};
+
+export type UserUpdateWithoutPostInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email?: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+};
+
+export type UserUncheckedUpdateWithoutPostInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email?: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+};
+
+export type PostCreateManyAuthorInput = {
+  id?: string;
+  title: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+export type PostUpdateWithoutAuthorInput = {
+  id?: string;
+  title?: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+export type PostUncheckedUpdateWithoutAuthorInput = {
+  id?: string;
+  title?: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+export type PostUncheckedUpdateManyWithoutAuthorInput = {
+  id?: string;
+  title?: string;
+  content?: any;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
 export enum TransactionIsolationLevel {
   ReadUncommitted = 'ReadUncommitted',
   ReadCommitted = 'ReadCommitted',
@@ -724,6 +1366,15 @@ export enum UserScalarFieldEnum {
   roles = 'roles',
   googleId = 'googleId',
   googleProfile = 'googleProfile',
+}
+export enum PostScalarFieldEnum {
+  id = 'id',
+  title = 'title',
+  content = 'content',
+  published = 'published',
+  createdAt = 'createdAt',
+  updatedAt = 'updatedAt',
+  authorId = 'authorId',
 }
 export enum SortOrder {
   asc = 'asc',
