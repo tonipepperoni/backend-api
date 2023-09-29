@@ -19,3 +19,10 @@ model User {
   googleId      String?  @unique
   googleProfile Json?
 }
+
+model Post {
+  id            String    @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  title         String
+  description   String
+}

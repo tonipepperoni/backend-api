@@ -24,6 +24,13 @@ export default gql`
     googleProfile
   }
 
+  enum PostScalarFieldEnum {
+    id
+    createdAt
+    title
+    description
+  }
+
   enum SortOrder {
     asc
     desc
@@ -117,6 +124,53 @@ export default gql`
     googleProfile: JsonNullableWithAggregatesFilter
   }
 
+  input PostWhereInput {
+    AND: [PostWhereInput!]
+    OR: [PostWhereInput!]
+    NOT: [PostWhereInput!]
+    id: StringFilter
+    createdAt: DateTimeFilter
+    title: StringFilter
+    description: StringFilter
+  }
+
+  input PostOrderByWithRelationInput {
+    id: SortOrder
+    createdAt: SortOrder
+    title: SortOrder
+    description: SortOrder
+  }
+
+  input PostWhereUniqueInput {
+    id: String
+    AND: [PostWhereInput!]
+    OR: [PostWhereInput!]
+    NOT: [PostWhereInput!]
+    createdAt: DateTimeFilter
+    title: StringFilter
+    description: StringFilter
+  }
+
+  input PostOrderByWithAggregationInput {
+    id: SortOrder
+    createdAt: SortOrder
+    title: SortOrder
+    description: SortOrder
+    _count: PostCountOrderByAggregateInput
+    _max: PostMaxOrderByAggregateInput
+    _min: PostMinOrderByAggregateInput
+  }
+
+  input PostScalarWhereWithAggregatesInput {
+    AND: [PostScalarWhereWithAggregatesInput!]
+    OR: [PostScalarWhereWithAggregatesInput!]
+    NOT: [PostScalarWhereWithAggregatesInput!]
+    id: StringWithAggregatesFilter
+    createdAt: DateTimeWithAggregatesFilter
+    title: StringWithAggregatesFilter
+    description: StringWithAggregatesFilter
+  }
+
   input UserCreateInput {
     id: String
     createdAt: DateTime
@@ -192,6 +246,55 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+  }
+
+  input PostCreateInput {
+    id: String
+    createdAt: DateTime
+    title: String!
+    description: String!
+  }
+
+  input PostUncheckedCreateInput {
+    id: String
+    createdAt: DateTime
+    title: String!
+    description: String!
+  }
+
+  input PostUpdateInput {
+    id: String
+    createdAt: DateTime
+    title: String
+    description: String
+  }
+
+  input PostUncheckedUpdateInput {
+    id: String
+    createdAt: DateTime
+    title: String
+    description: String
+  }
+
+  input PostCreateManyInput {
+    id: String
+    createdAt: DateTime
+    title: String!
+    description: String!
+  }
+
+  input PostUpdateManyMutationInput {
+    id: String
+    createdAt: DateTime
+    title: String
+    description: String
+  }
+
+  input PostUncheckedUpdateManyInput {
+    id: String
+    createdAt: DateTime
+    title: String
+    description: String
   }
 
   input StringFilter {
@@ -362,6 +465,27 @@ export default gql`
     _max: NestedJsonNullableFilter
   }
 
+  input PostCountOrderByAggregateInput {
+    id: SortOrder
+    createdAt: SortOrder
+    title: SortOrder
+    description: SortOrder
+  }
+
+  input PostMaxOrderByAggregateInput {
+    id: SortOrder
+    createdAt: SortOrder
+    title: SortOrder
+    description: SortOrder
+  }
+
+  input PostMinOrderByAggregateInput {
+    id: SortOrder
+    createdAt: SortOrder
+    title: SortOrder
+    description: SortOrder
+  }
+
   input UserCreaterolesInput {
     set: [String!]!
   }
@@ -514,6 +638,12 @@ export default gql`
     _max: UserMaxAggregateOutputType
   }
 
+  type AggregatePost {
+    _count: PostCountAggregateOutputType
+    _min: PostMinAggregateOutputType
+    _max: PostMaxAggregateOutputType
+  }
+
   type UserCountAggregateOutputType {
     id: Int!
     createdAt: Int!
@@ -542,5 +672,27 @@ export default gql`
     password: String
     email: String
     googleId: String
+  }
+
+  type PostCountAggregateOutputType {
+    id: Int!
+    createdAt: Int!
+    title: Int!
+    description: Int!
+    _all: Int!
+  }
+
+  type PostMinAggregateOutputType {
+    id: String
+    createdAt: DateTime
+    title: String
+    description: String
+  }
+
+  type PostMaxAggregateOutputType {
+    id: String
+    createdAt: DateTime
+    title: String
+    description: String
   }
 `;

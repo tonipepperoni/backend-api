@@ -7,10 +7,11 @@ import PALJS_TYPE_DEFS from '../paljs/typeDefs';
 import { AuthResolver, typeDefs as AuthTypeDefs } from './Auth';
 import { PRISMA_RESOLVERS, PRISMA_TYPE_DEFS } from './prisma';
 import { SampleResolver, typeDefs as SampleTypeDefs } from './Sample';
+import { PostResolver, typeDefs as PostTypeDefs } from "./prisma/Post";
 
-const API_RESOLVERS = [AuthResolver, SampleResolver];
+const API_RESOLVERS = [AuthResolver, SampleResolver, PostResolver];
 
-const API_TYPE_DEFS = [AuthTypeDefs, SampleTypeDefs].filter(x => x) as DocumentNode[];
+const API_TYPE_DEFS = [AuthTypeDefs, SampleTypeDefs, PostTypeDefs].filter(x => x) as DocumentNode[];
 
 export const ALL_RESOLVERS = [...PRISMA_RESOLVERS, ...API_RESOLVERS];
 

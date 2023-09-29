@@ -2,6 +2,7 @@
 import { Prisma } from './generated';
 
 export type DefaultFields = {
+  readonly Post?: Prisma.PostSelect;
   readonly User?: Prisma.UserSelect;
 };
 

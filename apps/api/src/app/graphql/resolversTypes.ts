@@ -24,14 +24,20 @@ export type Resolvers = {
   [key: string]: { [key: string]: Resolver<any, any, any> };
 } & {
   User?: User;
+  Post?: Post;
   Query?: Query;
   Mutation?: Mutation;
   AggregateUser?: AggregateUser;
   UserGroupByOutputType?: UserGroupByOutputType;
+  AggregatePost?: AggregatePost;
+  PostGroupByOutputType?: PostGroupByOutputType;
   AffectedRowsOutput?: AffectedRowsOutput;
   UserCountAggregateOutputType?: UserCountAggregateOutputType;
   UserMinAggregateOutputType?: UserMinAggregateOutputType;
   UserMaxAggregateOutputType?: UserMaxAggregateOutputType;
+  PostCountAggregateOutputType?: PostCountAggregateOutputType;
+  PostMinAggregateOutputType?: PostMinAggregateOutputType;
+  PostMaxAggregateOutputType?: PostMaxAggregateOutputType;
 };
 
 export type User = { [key: string]: Resolver<any, any, any> } & {
@@ -43,6 +49,13 @@ export type User = { [key: string]: Resolver<any, any, any> } & {
   roles?: Resolver<Client.User, {}, string[] | null>;
   googleId?: Resolver<Client.User, {}, string | null>;
   googleProfile?: Resolver<Client.User, {}, any | null>;
+};
+
+export type Post = { [key: string]: Resolver<any, any, any> } & {
+  id?: Resolver<Client.Post, {}, string>;
+  createdAt?: Resolver<Client.Post, {}, Date>;
+  title?: Resolver<Client.Post, {}, string>;
+  description?: Resolver<Client.Post, {}, string>;
 };
 
 export type Query = { [key: string]: Resolver<any, any, any> } & {
@@ -58,6 +71,18 @@ export type Query = { [key: string]: Resolver<any, any, any> } & {
   groupByUser?: Resolver<{}, GroupByUserArgs, Client.Prisma.UserGroupByOutputType[]>;
   findUniqueUser?: Resolver<{}, FindUniqueUserArgs, Client.User | null>;
   findUniqueUserOrThrow?: Resolver<{}, FindUniqueUserOrThrowArgs, Client.User | null>;
+  findFirstPost?: Resolver<{}, FindFirstPostArgs, Client.Post | null>;
+  findFirstPostOrThrow?: Resolver<{}, FindFirstPostOrThrowArgs, Client.Post | null>;
+  findManyPost?: Resolver<{}, FindManyPostArgs, Client.Post[]>;
+  findManyPostCount?: Resolver<{}, FindManyPostArgs, number>;
+  aggregatePost?: Resolver<
+    {},
+    AggregatePostArgs,
+    Client.Prisma.GetPostAggregateType<AggregatePostArgs>
+  >;
+  groupByPost?: Resolver<{}, GroupByPostArgs, Client.Prisma.PostGroupByOutputType[]>;
+  findUniquePost?: Resolver<{}, FindUniquePostArgs, Client.Post | null>;
+  findUniquePostOrThrow?: Resolver<{}, FindUniquePostOrThrowArgs, Client.Post | null>;
 };
 
 export type Mutation = { [key: string]: Resolver<any, any, any> } & {
@@ -68,6 +93,13 @@ export type Mutation = { [key: string]: Resolver<any, any, any> } & {
   updateOneUser?: Resolver<{}, UpdateOneUserArgs, Client.User | null>;
   updateManyUser?: Resolver<{}, UpdateManyUserArgs, Client.Prisma.BatchPayload>;
   deleteManyUser?: Resolver<{}, DeleteManyUserArgs, Client.Prisma.BatchPayload>;
+  createOnePost?: Resolver<{}, CreateOnePostArgs, Client.Post>;
+  upsertOnePost?: Resolver<{}, UpsertOnePostArgs, Client.Post>;
+  createManyPost?: Resolver<{}, CreateManyPostArgs, Client.Prisma.BatchPayload>;
+  deleteOnePost?: Resolver<{}, DeleteOnePostArgs, Client.Post | null>;
+  updateOnePost?: Resolver<{}, UpdateOnePostArgs, Client.Post | null>;
+  updateManyPost?: Resolver<{}, UpdateManyPostArgs, Client.Prisma.BatchPayload>;
+  deleteManyPost?: Resolver<{}, DeleteManyPostArgs, Client.Prisma.BatchPayload>;
   executeRaw?: Resolver<{}, ExecuteRawArgs, any>;
   queryRaw?: Resolver<{}, QueryRawArgs, any>;
 };
@@ -110,6 +142,40 @@ export type UserGroupByOutputType = {
   >;
 };
 
+export type AggregatePost = { [key: string]: Resolver<any, any, any> } & {
+  _count?: Resolver<
+    Client.Prisma.AggregatePost,
+    {},
+    Client.Prisma.PostCountAggregateOutputType | null
+  >;
+  _min?: Resolver<Client.Prisma.AggregatePost, {}, Client.Prisma.PostMinAggregateOutputType | null>;
+  _max?: Resolver<Client.Prisma.AggregatePost, {}, Client.Prisma.PostMaxAggregateOutputType | null>;
+};
+
+export type PostGroupByOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.PostGroupByOutputType, {}, string>;
+  createdAt?: Resolver<Client.Prisma.PostGroupByOutputType, {}, Date>;
+  title?: Resolver<Client.Prisma.PostGroupByOutputType, {}, string>;
+  description?: Resolver<Client.Prisma.PostGroupByOutputType, {}, string>;
+  _count?: Resolver<
+    Client.Prisma.PostGroupByOutputType,
+    {},
+    Client.Prisma.PostCountAggregateOutputType | null
+  >;
+  _min?: Resolver<
+    Client.Prisma.PostGroupByOutputType,
+    {},
+    Client.Prisma.PostMinAggregateOutputType | null
+  >;
+  _max?: Resolver<
+    Client.Prisma.PostGroupByOutputType,
+    {},
+    Client.Prisma.PostMaxAggregateOutputType | null
+  >;
+};
+
 export type AffectedRowsOutput = { [key: string]: Resolver<any, any, any> } & {
   count?: Resolver<Client.Prisma.BatchPayload, {}, number>;
 };
@@ -148,6 +214,34 @@ export type UserMaxAggregateOutputType = {
   password?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   email?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   googleId?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
+};
+
+export type PostCountAggregateOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  createdAt?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  title?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  description?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+  _all?: Resolver<Client.Prisma.PostCountAggregateOutputType, {}, number>;
+};
+
+export type PostMinAggregateOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, string | null>;
+  createdAt?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, Date | null>;
+  title?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, string | null>;
+  description?: Resolver<Client.Prisma.PostMinAggregateOutputType, {}, string | null>;
+};
+
+export type PostMaxAggregateOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, string | null>;
+  createdAt?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, Date | null>;
+  title?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, string | null>;
+  description?: Resolver<Client.Prisma.PostMaxAggregateOutputType, {}, string | null>;
 };
 
 export type FindFirstUserArgs = {
@@ -205,6 +299,61 @@ export type FindUniqueUserOrThrowArgs = {
   where: UserWhereUniqueInput;
 };
 
+export type FindFirstPostArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithRelationInput[];
+  cursor?: PostWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: PostScalarFieldEnum[];
+};
+
+export type FindFirstPostOrThrowArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithRelationInput[];
+  cursor?: PostWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: PostScalarFieldEnum[];
+};
+
+export type FindManyPostArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithRelationInput[];
+  cursor?: PostWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: PostScalarFieldEnum[];
+};
+
+export type AggregatePostArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithRelationInput[];
+  cursor?: PostWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  _count?: Client.Prisma.PostCountAggregateInputType;
+  _min?: Client.Prisma.PostMinAggregateInputType;
+  _max?: Client.Prisma.PostMaxAggregateInputType;
+};
+
+export type GroupByPostArgs = {
+  where?: PostWhereInput;
+  orderBy?: PostOrderByWithAggregationInput[];
+  by: PostScalarFieldEnum[];
+  having?: PostScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+};
+
+export type FindUniquePostArgs = {
+  where: PostWhereUniqueInput;
+};
+
+export type FindUniquePostOrThrowArgs = {
+  where: PostWhereUniqueInput;
+};
+
 export type CreateOneUserArgs = {
   data: UserCreateInput;
 };
@@ -236,6 +385,39 @@ export type UpdateManyUserArgs = {
 
 export type DeleteManyUserArgs = {
   where?: UserWhereInput;
+};
+
+export type CreateOnePostArgs = {
+  data: PostCreateInput;
+};
+
+export type UpsertOnePostArgs = {
+  where: PostWhereUniqueInput;
+  create: PostCreateInput;
+  update: PostUpdateInput;
+};
+
+export type CreateManyPostArgs = {
+  data: PostCreateManyInput[];
+  skipDuplicates?: boolean;
+};
+
+export type DeleteOnePostArgs = {
+  where: PostWhereUniqueInput;
+};
+
+export type UpdateOnePostArgs = {
+  data: PostUpdateInput;
+  where: PostWhereUniqueInput;
+};
+
+export type UpdateManyPostArgs = {
+  data: PostUpdateManyMutationInput;
+  where?: PostWhereInput;
+};
+
+export type DeleteManyPostArgs = {
+  where?: PostWhereInput;
 };
 
 export type ExecuteRawArgs = {
@@ -318,6 +500,56 @@ export type UserScalarWhereWithAggregatesInput = {
   googleProfile?: JsonNullableWithAggregatesFilter;
 };
 
+export type PostWhereInput = {
+  AND?: PostWhereInput[];
+  OR?: PostWhereInput[];
+  NOT?: PostWhereInput[];
+  id?: StringFilter;
+  createdAt?: DateTimeFilter;
+  title?: StringFilter;
+  description?: StringFilter;
+};
+
+export type PostOrderByWithRelationInput = {
+  id?: SortOrder;
+  createdAt?: SortOrder;
+  title?: SortOrder;
+  description?: SortOrder;
+};
+
+export type PostWhereUniqueInput = AtLeast<
+  {
+    id?: string;
+    AND?: PostWhereInput[];
+    OR?: PostWhereInput[];
+    NOT?: PostWhereInput[];
+    createdAt?: DateTimeFilter;
+    title?: StringFilter;
+    description?: StringFilter;
+  },
+  'id'
+>;
+
+export type PostOrderByWithAggregationInput = {
+  id?: SortOrder;
+  createdAt?: SortOrder;
+  title?: SortOrder;
+  description?: SortOrder;
+  _count?: PostCountOrderByAggregateInput;
+  _max?: PostMaxOrderByAggregateInput;
+  _min?: PostMinOrderByAggregateInput;
+};
+
+export type PostScalarWhereWithAggregatesInput = {
+  AND?: PostScalarWhereWithAggregatesInput[];
+  OR?: PostScalarWhereWithAggregatesInput[];
+  NOT?: PostScalarWhereWithAggregatesInput[];
+  id?: StringWithAggregatesFilter;
+  createdAt?: DateTimeWithAggregatesFilter;
+  title?: StringWithAggregatesFilter;
+  description?: StringWithAggregatesFilter;
+};
+
 export type UserCreateInput = {
   id?: string;
   createdAt?: Date;
@@ -393,6 +625,55 @@ export type UserUncheckedUpdateManyInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+};
+
+export type PostCreateInput = {
+  id?: string;
+  createdAt?: Date;
+  title: string;
+  description: string;
+};
+
+export type PostUncheckedCreateInput = {
+  id?: string;
+  createdAt?: Date;
+  title: string;
+  description: string;
+};
+
+export type PostUpdateInput = {
+  id?: string;
+  createdAt?: Date;
+  title?: string;
+  description?: string;
+};
+
+export type PostUncheckedUpdateInput = {
+  id?: string;
+  createdAt?: Date;
+  title?: string;
+  description?: string;
+};
+
+export type PostCreateManyInput = {
+  id?: string;
+  createdAt?: Date;
+  title: string;
+  description: string;
+};
+
+export type PostUpdateManyMutationInput = {
+  id?: string;
+  createdAt?: Date;
+  title?: string;
+  description?: string;
+};
+
+export type PostUncheckedUpdateManyInput = {
+  id?: string;
+  createdAt?: Date;
+  title?: string;
+  description?: string;
 };
 
 export type StringFilter = {
@@ -563,6 +844,27 @@ export type JsonNullableWithAggregatesFilter = {
   _max?: NestedJsonNullableFilter;
 };
 
+export type PostCountOrderByAggregateInput = {
+  id?: SortOrder;
+  createdAt?: SortOrder;
+  title?: SortOrder;
+  description?: SortOrder;
+};
+
+export type PostMaxOrderByAggregateInput = {
+  id?: SortOrder;
+  createdAt?: SortOrder;
+  title?: SortOrder;
+  description?: SortOrder;
+};
+
+export type PostMinOrderByAggregateInput = {
+  id?: SortOrder;
+  createdAt?: SortOrder;
+  title?: SortOrder;
+  description?: SortOrder;
+};
+
 export type UserCreaterolesInput = {
   set: string[];
 };
@@ -724,6 +1026,12 @@ export enum UserScalarFieldEnum {
   roles = 'roles',
   googleId = 'googleId',
   googleProfile = 'googleProfile',
+}
+export enum PostScalarFieldEnum {
+  id = 'id',
+  createdAt = 'createdAt',
+  title = 'title',
+  description = 'description',
 }
 export enum SortOrder {
   asc = 'asc',
