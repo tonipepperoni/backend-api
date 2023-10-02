@@ -22,6 +22,7 @@ export default gql`
     roles
     googleId
     googleProfile
+    avatar
   }
 
   enum PostScalarFieldEnum {
@@ -72,6 +73,7 @@ export default gql`
     roles: StringNullableListFilter
     googleId: StringNullableFilter
     googleProfile: JsonNullableFilter
+    avatar: StringNullableFilter
     Post: PostListRelationFilter
   }
 
@@ -84,6 +86,7 @@ export default gql`
     roles: SortOrder
     googleId: SortOrderInput
     googleProfile: SortOrderInput
+    avatar: SortOrderInput
     Post: PostOrderByRelationAggregateInput
   }
 
@@ -99,6 +102,7 @@ export default gql`
     password: StringNullableFilter
     roles: StringNullableListFilter
     googleProfile: JsonNullableFilter
+    avatar: StringNullableFilter
     Post: PostListRelationFilter
   }
 
@@ -111,6 +115,7 @@ export default gql`
     roles: SortOrder
     googleId: SortOrderInput
     googleProfile: SortOrderInput
+    avatar: SortOrderInput
     _count: UserCountOrderByAggregateInput
     _max: UserMaxOrderByAggregateInput
     _min: UserMinOrderByAggregateInput
@@ -128,6 +133,7 @@ export default gql`
     roles: StringNullableListFilter
     googleId: StringNullableWithAggregatesFilter
     googleProfile: JsonNullableWithAggregatesFilter
+    avatar: StringNullableWithAggregatesFilter
   }
 
   input PostWhereInput {
@@ -204,6 +210,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
     Post: PostCreateNestedManyWithoutAuthorInput
   }
 
@@ -216,6 +223,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
     Post: PostUncheckedCreateNestedManyWithoutAuthorInput
   }
 
@@ -228,6 +236,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
     Post: PostUpdateManyWithoutAuthorNestedInput
   }
 
@@ -240,6 +249,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
     Post: PostUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
@@ -252,6 +262,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
   }
 
   input UserUpdateManyMutationInput {
@@ -263,6 +274,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
   }
 
   input UserUncheckedUpdateManyInput {
@@ -274,6 +286,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
   }
 
   input PostCreateInput {
@@ -434,6 +447,7 @@ export default gql`
     roles: SortOrder
     googleId: SortOrder
     googleProfile: SortOrder
+    avatar: SortOrder
   }
 
   input UserMaxOrderByAggregateInput {
@@ -443,6 +457,7 @@ export default gql`
     password: SortOrder
     email: SortOrder
     googleId: SortOrder
+    avatar: SortOrder
   }
 
   input UserMinOrderByAggregateInput {
@@ -452,6 +467,7 @@ export default gql`
     password: SortOrder
     email: SortOrder
     googleId: SortOrder
+    avatar: SortOrder
   }
 
   input StringWithAggregatesFilter {
@@ -854,6 +870,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
   }
 
   input UserUncheckedCreateWithoutPostInput {
@@ -865,6 +882,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
   }
 
   input UserCreateOrConnectWithoutPostInput {
@@ -892,6 +910,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
   }
 
   input UserUncheckedUpdateWithoutPostInput {
@@ -903,6 +922,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
+    avatar: String
   }
 
   input PostCreateManyAuthorInput {
@@ -966,6 +986,7 @@ export default gql`
     roles: Int!
     googleId: Int!
     googleProfile: Int!
+    avatar: Int!
     _all: Int!
   }
 
@@ -976,6 +997,7 @@ export default gql`
     password: String
     email: String
     googleId: String
+    avatar: String
   }
 
   type UserMaxAggregateOutputType {
@@ -985,6 +1007,7 @@ export default gql`
     password: String
     email: String
     googleId: String
+    avatar: String
   }
 
   type PostCountAggregateOutputType {
