@@ -25,7 +25,6 @@ import type {
 } from '../../resolversTypes';
 import {createWriteStream} from "node:fs";
 import path from "node:path";
-import crypto from "crypto";
 
 export const typeDefs = gql`
   extend type User {
@@ -139,8 +138,12 @@ export class UserResolver {
   ) {
     await uploadFiles.createUploadDirectory();
     const {createReadStream, filename} = file;
-    const imgType = filename.split(".");
-    const uniqueFilename = `${Date.now()}-${uuidv4()}.${imgType[1]}`;
+    const imgType = filename.split(".").reverse();
+
+    if (!uploadFiles.ALLOWED_MIME_TYPES.includes(imgType[0])) {
+      throw new Error(`Mimetype ${imgType[1]} is not allowed`)
+    }
+    const uniqueFilename = `${Date.now()}-${uuidv4()}.${imgType[0]}`;
 
     createReadStream()
       .on('error', err => {

@@ -1,15 +1,9 @@
 import {PathLike} from "node:fs";
 import {mkdir, stat} from "node:fs/promises";
-import path from "node:path";
 
 const AVATAR_PATH = './apps/api/src/assets/avatars';
 
-const currentPath = () => {
-  const currentPath = path.join(__dirname);
-  console.log("\x1B[31m__currentPath", currentPath);
-
-  return currentPath;
-}
+const ALLOWED_MIME_TYPES = ["png", "jpg", "jpeg", "gif"];
 
 // @TODO: implement separate folder for uploading files/avatars/other images
 async function fileExists(filePath: PathLike) {
@@ -30,5 +24,5 @@ async function createUploadDirectory() {
 export const uploadFiles = {
   createUploadDirectory,
   AVATAR_PATH,
-  currentPath,
+  ALLOWED_MIME_TYPES,
 }
