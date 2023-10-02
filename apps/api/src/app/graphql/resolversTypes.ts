@@ -50,6 +50,7 @@ export type User = { [key: string]: Resolver<any, any, any> } & {
   roles?: Resolver<Client.User, {}, string[] | null>;
   googleId?: Resolver<Client.User, {}, string | null>;
   googleProfile?: Resolver<Client.User, {}, any | null>;
+  avatar?: Resolver<Client.User, {}, string | null>;
   Post?: Resolver<Client.User, UserPostArgs, Client.Post[] | null>;
   _count?: Resolver<Client.User, {}, Client.Prisma.UserCountOutputType>;
 };
@@ -132,6 +133,7 @@ export type UserGroupByOutputType = {
   roles?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string[] | null>;
   googleId?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string | null>;
   googleProfile?: Resolver<Client.Prisma.UserGroupByOutputType, {}, any | null>;
+  avatar?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string | null>;
   _count?: Resolver<
     Client.Prisma.UserGroupByOutputType,
     {},
@@ -205,6 +207,7 @@ export type UserCountAggregateOutputType = {
   roles?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
   googleId?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
   googleProfile?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
+  avatar?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
   _all?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
 };
 
@@ -217,6 +220,7 @@ export type UserMinAggregateOutputType = {
   password?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
   email?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
   googleId?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
+  avatar?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
 };
 
 export type UserMaxAggregateOutputType = {
@@ -228,6 +232,7 @@ export type UserMaxAggregateOutputType = {
   password?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   email?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   googleId?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
+  avatar?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
 };
 
 export type PostCountAggregateOutputType = {
@@ -476,6 +481,7 @@ export type UserWhereInput = {
   roles?: StringNullableListFilter;
   googleId?: StringNullableFilter | null;
   googleProfile?: JsonNullableFilter;
+  avatar?: StringNullableFilter | null;
   Post?: PostListRelationFilter;
 };
 
@@ -488,6 +494,7 @@ export type UserOrderByWithRelationInput = {
   roles?: SortOrder;
   googleId?: SortOrderInput;
   googleProfile?: SortOrderInput;
+  avatar?: SortOrderInput;
   Post?: PostOrderByRelationAggregateInput;
 };
 
@@ -504,6 +511,7 @@ export type UserWhereUniqueInput = AtLeast<
     password?: StringNullableFilter | null;
     roles?: StringNullableListFilter;
     googleProfile?: JsonNullableFilter;
+    avatar?: StringNullableFilter | null;
     Post?: PostListRelationFilter;
   },
   'id' | 'username' | 'email' | 'googleId'
@@ -518,6 +526,7 @@ export type UserOrderByWithAggregationInput = {
   roles?: SortOrder;
   googleId?: SortOrderInput;
   googleProfile?: SortOrderInput;
+  avatar?: SortOrderInput;
   _count?: UserCountOrderByAggregateInput;
   _max?: UserMaxOrderByAggregateInput;
   _min?: UserMinOrderByAggregateInput;
@@ -535,6 +544,7 @@ export type UserScalarWhereWithAggregatesInput = {
   roles?: StringNullableListFilter;
   googleId?: StringNullableWithAggregatesFilter | null;
   googleProfile?: JsonNullableWithAggregatesFilter;
+  avatar?: StringNullableWithAggregatesFilter | null;
 };
 
 export type PostWhereInput = {
@@ -614,6 +624,7 @@ export type UserCreateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
   Post?: PostCreateNestedManyWithoutAuthorInput;
 };
 
@@ -626,6 +637,7 @@ export type UserUncheckedCreateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
   Post?: PostUncheckedCreateNestedManyWithoutAuthorInput;
 };
 
@@ -638,6 +650,7 @@ export type UserUpdateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
   Post?: PostUpdateManyWithoutAuthorNestedInput;
 };
 
@@ -650,6 +663,7 @@ export type UserUncheckedUpdateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
   Post?: PostUncheckedUpdateManyWithoutAuthorNestedInput;
 };
 
@@ -662,6 +676,7 @@ export type UserCreateManyInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
 };
 
 export type UserUpdateManyMutationInput = {
@@ -673,6 +688,7 @@ export type UserUpdateManyMutationInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
 };
 
 export type UserUncheckedUpdateManyInput = {
@@ -684,6 +700,7 @@ export type UserUncheckedUpdateManyInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
 };
 
 export type PostCreateInput = {
@@ -844,6 +861,7 @@ export type UserCountOrderByAggregateInput = {
   roles?: SortOrder;
   googleId?: SortOrder;
   googleProfile?: SortOrder;
+  avatar?: SortOrder;
 };
 
 export type UserMaxOrderByAggregateInput = {
@@ -853,6 +871,7 @@ export type UserMaxOrderByAggregateInput = {
   password?: SortOrder;
   email?: SortOrder;
   googleId?: SortOrder;
+  avatar?: SortOrder;
 };
 
 export type UserMinOrderByAggregateInput = {
@@ -862,6 +881,7 @@ export type UserMinOrderByAggregateInput = {
   password?: SortOrder;
   email?: SortOrder;
   googleId?: SortOrder;
+  avatar?: SortOrder;
 };
 
 export type StringWithAggregatesFilter = {
@@ -1264,6 +1284,7 @@ export type UserCreateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
 };
 
 export type UserUncheckedCreateWithoutPostInput = {
@@ -1275,6 +1296,7 @@ export type UserUncheckedCreateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
 };
 
 export type UserCreateOrConnectWithoutPostInput = {
@@ -1302,6 +1324,7 @@ export type UserUpdateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
 };
 
 export type UserUncheckedUpdateWithoutPostInput = {
@@ -1313,6 +1336,7 @@ export type UserUncheckedUpdateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
+  avatar?: string | null;
 };
 
 export type PostCreateManyAuthorInput = {
@@ -1366,6 +1390,7 @@ export enum UserScalarFieldEnum {
   roles = 'roles',
   googleId = 'googleId',
   googleProfile = 'googleProfile',
+  avatar = 'avatar',
 }
 export enum PostScalarFieldEnum {
   id = 'id',

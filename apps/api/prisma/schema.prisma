@@ -19,6 +19,7 @@ model User {
   googleId      String?  @unique
   googleProfile Json?
   Post          Post[]
+  avatar        String?
 
   @@map(name: "Users")
 }

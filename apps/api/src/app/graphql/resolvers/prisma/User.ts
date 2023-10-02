@@ -1,9 +1,13 @@
-import { UseGuards } from '@nestjs/common';
+import {UseGuards} from '@nestjs/common';
 import { Args, Info, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import type { NonNullableFields } from '@zen/common';
 import { RolesGuard } from '@zen/nest-auth';
 import { GraphQLResolveInfo } from 'graphql';
 import gql from 'graphql-tag';
+import type { Upload } from "../../models";
+import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
+import {uploadFiles} from "../../../utils/upload";
+import { v4 as uuidv4 } from 'uuid';
 
 import { AuthService } from '../../../auth';
 import { PrismaSelectService, PrismaService, User } from '../../../prisma';
@@ -19,12 +23,27 @@ import type {
   UpdateOneUserArgs,
   UpsertOneUserArgs,
 } from '../../resolversTypes';
+import {createWriteStream} from "node:fs";
+import path from "node:path";
+import crypto from "crypto";
 
 export const typeDefs = gql`
   extend type User {
     rules: [Json!]!
   }
+
+  extend type Mutation {
+    uploadUserAvatar(file: Upload!, email: UserEmail): User
+  }
+
+  input UserEmail {
+    email: String!
+  }
 `;
+
+interface UserEmailInput {
+  email: string;
+}
 
 @Resolver('User')
 @UseGuards(RolesGuard('Prisma'))
@@ -87,7 +106,6 @@ export class UserResolver {
     @Args() args: NonNullableFields<UpdateOneUserArgs>,
     @Info() info: GraphQLResolveInfo
   ) {
-    console.log('updateOneUser', args);
     return this.prisma.user.update(this.prismaSelect.getArgs(info, args));
   }
 
@@ -112,5 +130,32 @@ export class UserResolver {
   @Mutation()
   async deleteManyUser(@Args() args: DeleteManyUserArgs, @Info() info: GraphQLResolveInfo) {
     return this.prisma.user.deleteMany(this.prismaSelect.getArgs(info, args));
+  }
+
+  @Mutation()
+  async uploadUserAvatar(
+    @Args("file", {type: () => GraphQLUpload}) file: Upload,
+    @Args("email") email: UserEmailInput
+  ) {
+    await uploadFiles.createUploadDirectory();
+    const {createReadStream, filename} = file;
+    const imgType = filename.split(".");
+    const uniqueFilename = `${Date.now()}-${uuidv4()}.${imgType[1]}`;
+
+    createReadStream()
+      .on('error', err => {
+        console.log(`${filename} ReadStream Error`, err);
+      })
+      .pipe(createWriteStream(path.join(uploadFiles.AVATAR_PATH, uniqueFilename)))
+      .on('error', err => {
+        console.log(`${filename} WriteStream Error`, err);
+      });
+
+    return this.prisma.user.update({
+      where: email,
+      data: {
+        avatar: uniqueFilename,
+      }
+    });
   }
 }
