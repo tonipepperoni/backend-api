@@ -1,1 +1,1 @@
-export * from './tools.controller';
+export * from '../image-upload/image-upload.controller';

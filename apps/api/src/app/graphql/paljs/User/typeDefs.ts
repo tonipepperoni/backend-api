@@ -10,7 +10,7 @@ export default gql`
     roles: [String!]!
     googleId: String
     googleProfile: Json
-    avatar: String
+    avatarId: String
     Post(
       where: PostWhereInput
       orderBy: [PostOrderByWithRelationInput]
@@ -19,6 +19,7 @@ export default gql`
       skip: Int
       distinct: [PostScalarFieldEnum]
     ): [Post!]!
+    avatar(where: FileUploadWhereInput): FileUpload
     _count: UserCountOutputType!
   }
 

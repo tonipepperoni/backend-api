@@ -5,11 +5,11 @@ import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { environment } from '../environments/environment';
 import { ZenAuthModule } from './auth';
 import { ConfigModule, ConfigService } from './config';
-import { ToolsController } from './controllers';
 import { ZenGraphQLModule } from './graphql';
 import { JwtModule } from './jwt';
 import { MailModule } from './mail';
 import { PrismaModule } from './prisma';
+import { ImageUploadModule } from "./image-upload";
 
 @Module({
   imports: [
@@ -24,8 +24,8 @@ import { PrismaModule } from './prisma';
     JwtModule,
     MailModule,
     PrismaModule,
+    ImageUploadModule
   ],
-  controllers: [ToolsController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
