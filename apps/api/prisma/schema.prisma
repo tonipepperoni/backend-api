@@ -10,18 +10,30 @@ generator client {
 }
 
 model User {
-  id            String   @id @default(uuid())
-  createdAt     DateTime @default(now())
-  username      String?  @unique
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  username      String?     @unique
   password      String?
-  email         String   @unique
+  email         String      @unique
   roles         String[]
-  googleId      String?  @unique
+  googleId      String?     @unique
   googleProfile Json?
   Post          Post[]
-  avatar        String?
+  avatarId      String?
+  avatar        FileUpload? @relation(fields: [avatarId], references: [id])
 
   @@map(name: "Users")
+}
+
+model FileUpload {
+  id               String   @id @default(cuid())
+  type             String
+  filePathUrl      String
+  thumbnailPathUrl String?
+  createdAt        DateTime @default(now()) @map(name: "created_at")
+  updatedAt        DateTime @default(now()) @map(name: "updated_at")
+  authorId         String
+  author           User[]
 }
 
 model Post {
@@ -32,8 +44,7 @@ model Post {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
   authorId  String
-
-  author User @relation(fields: [authorId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
 
   @@map(name: "Posts")
 }

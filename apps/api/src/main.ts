@@ -11,7 +11,7 @@ import * as express from 'express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: environment.cors });
   app.enableShutdownHooks();
-
+  app.enableCors();
   const staticFilesPath = path.join(__dirname, './assets/avatars');
   app.use('/avatars', express.static(staticFilesPath));
 
