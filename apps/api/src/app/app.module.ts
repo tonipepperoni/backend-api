@@ -3,13 +3,13 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 
 import { environment } from '../environments/environment';
-import { ZenAuthModule } from './auth';
-import { ConfigModule, ConfigService } from './config';
-import { ZenGraphQLModule } from './graphql';
-import { JwtModule } from './jwt';
-import { MailModule } from './mail';
-import { PrismaModule } from './prisma';
-import { ImageUploadModule } from "./image-upload";
+import { ZenAuthModule } from './features/auth';
+import { ConfigModule, ConfigService } from './features/config';
+import { ZenGraphQLModule } from './features/graphql';
+import { JwtModule } from './features/jwt';
+import { MailModule } from './features/mail';
+import { PrismaModule } from './features/prisma';
+import { ImageUploadModule } from "./features/image-upload";
 
 @Module({
   imports: [

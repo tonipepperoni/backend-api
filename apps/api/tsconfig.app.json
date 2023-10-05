@@ -17,7 +17,7 @@
     "jest.config.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
-    "src/app/graphql/paljs/**/resolvers.ts"
+    "src/app/features/graphql/paljs/**/resolvers.ts"
   ],
   "include": ["src/**/*.ts"]
 }

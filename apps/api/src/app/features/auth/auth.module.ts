@@ -1,7 +1,7 @@
 import { Module, Provider } from '@nestjs/common';
 import { NestAuthModule } from '@zen/nest-auth';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { JwtModule } from '../jwt';
 import { PrismaModule } from '../prisma';
 import { AuthController } from './auth.controller';
