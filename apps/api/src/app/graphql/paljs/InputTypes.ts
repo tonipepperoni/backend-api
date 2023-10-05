@@ -22,7 +22,6 @@ export default gql`
     roles
     googleId
     googleProfile
-    avatarId
   }
 
   enum FileUploadScalarFieldEnum {
@@ -83,7 +82,6 @@ export default gql`
     roles: StringNullableListFilter
     googleId: StringNullableFilter
     googleProfile: JsonNullableFilter
-    avatarId: StringNullableFilter
     Post: PostListRelationFilter
     avatar: FileUploadNullableRelationFilter
   }
@@ -97,7 +95,6 @@ export default gql`
     roles: SortOrder
     googleId: SortOrderInput
     googleProfile: SortOrderInput
-    avatarId: SortOrderInput
     Post: PostOrderByRelationAggregateInput
     avatar: FileUploadOrderByWithRelationInput
   }
@@ -114,7 +111,6 @@ export default gql`
     password: StringNullableFilter
     roles: StringNullableListFilter
     googleProfile: JsonNullableFilter
-    avatarId: StringNullableFilter
     Post: PostListRelationFilter
     avatar: FileUploadNullableRelationFilter
   }
@@ -128,7 +124,6 @@ export default gql`
     roles: SortOrder
     googleId: SortOrderInput
     googleProfile: SortOrderInput
-    avatarId: SortOrderInput
     _count: UserCountOrderByAggregateInput
     _max: UserMaxOrderByAggregateInput
     _min: UserMinOrderByAggregateInput
@@ -146,7 +141,6 @@ export default gql`
     roles: StringNullableListFilter
     googleId: StringNullableWithAggregatesFilter
     googleProfile: JsonNullableWithAggregatesFilter
-    avatarId: StringNullableWithAggregatesFilter
   }
 
   input FileUploadWhereInput {
@@ -160,7 +154,7 @@ export default gql`
     createdAt: DateTimeFilter
     updatedAt: DateTimeFilter
     authorId: StringFilter
-    author: UserListRelationFilter
+    author: UserNullableRelationFilter
   }
 
   input FileUploadOrderByWithRelationInput {
@@ -171,11 +165,12 @@ export default gql`
     createdAt: SortOrder
     updatedAt: SortOrder
     authorId: SortOrder
-    author: UserOrderByRelationAggregateInput
+    author: UserOrderByWithRelationInput
   }
 
   input FileUploadWhereUniqueInput {
     id: String
+    authorId: String
     AND: [FileUploadWhereInput!]
     OR: [FileUploadWhereInput!]
     NOT: [FileUploadWhereInput!]
@@ -184,8 +179,7 @@ export default gql`
     thumbnailPathUrl: StringNullableFilter
     createdAt: DateTimeFilter
     updatedAt: DateTimeFilter
-    authorId: StringFilter
-    author: UserListRelationFilter
+    author: UserNullableRelationFilter
   }
 
   input FileUploadOrderByWithAggregationInput {
@@ -301,8 +295,8 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
-    avatarId: String
     Post: PostUncheckedCreateNestedManyWithoutAuthorInput
+    avatar: FileUploadUncheckedCreateNestedOneWithoutAuthorInput
   }
 
   input UserUpdateInput {
@@ -327,8 +321,8 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
-    avatarId: String
     Post: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    avatar: FileUploadUncheckedUpdateOneWithoutAuthorNestedInput
   }
 
   input UserCreateManyInput {
@@ -340,7 +334,6 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
-    avatarId: String
   }
 
   input UserUpdateManyMutationInput {
@@ -363,7 +356,6 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
-    avatarId: String
   }
 
   input FileUploadCreateInput {
@@ -373,8 +365,7 @@ export default gql`
     thumbnailPathUrl: String
     createdAt: DateTime
     updatedAt: DateTime
-    authorId: String!
-    author: UserCreateNestedManyWithoutAvatarInput
+    author: UserCreateNestedOneWithoutAvatarInput
   }
 
   input FileUploadUncheckedCreateInput {
@@ -385,7 +376,6 @@ export default gql`
     createdAt: DateTime
     updatedAt: DateTime
     authorId: String!
-    author: UserUncheckedCreateNestedManyWithoutAvatarInput
   }
 
   input FileUploadUpdateInput {
@@ -395,8 +385,7 @@ export default gql`
     thumbnailPathUrl: String
     createdAt: DateTime
     updatedAt: DateTime
-    authorId: String
-    author: UserUpdateManyWithoutAvatarNestedInput
+    author: UserUpdateOneWithoutAvatarNestedInput
   }
 
   input FileUploadUncheckedUpdateInput {
@@ -407,7 +396,6 @@ export default gql`
     createdAt: DateTime
     updatedAt: DateTime
     authorId: String
-    author: UserUncheckedUpdateManyWithoutAvatarNestedInput
   }
 
   input FileUploadCreateManyInput {
@@ -427,7 +415,6 @@ export default gql`
     thumbnailPathUrl: String
     createdAt: DateTime
     updatedAt: DateTime
-    authorId: String
   }
 
   input FileUploadUncheckedUpdateManyInput {
@@ -603,7 +590,6 @@ export default gql`
     roles: SortOrder
     googleId: SortOrder
     googleProfile: SortOrder
-    avatarId: SortOrder
   }
 
   input UserMaxOrderByAggregateInput {
@@ -613,7 +599,6 @@ export default gql`
     password: SortOrder
     email: SortOrder
     googleId: SortOrder
-    avatarId: SortOrder
   }
 
   input UserMinOrderByAggregateInput {
@@ -623,7 +608,6 @@ export default gql`
     password: SortOrder
     email: SortOrder
     googleId: SortOrder
-    avatarId: SortOrder
   }
 
   input StringWithAggregatesFilter {
@@ -695,14 +679,9 @@ export default gql`
     _max: NestedJsonNullableFilter
   }
 
-  input UserListRelationFilter {
-    every: UserWhereInput
-    some: UserWhereInput
-    none: UserWhereInput
-  }
-
-  input UserOrderByRelationAggregateInput {
-    _count: SortOrder
+  input UserNullableRelationFilter {
+    is: UserWhereInput
+    isNot: UserWhereInput
   }
 
   input FileUploadCountOrderByAggregateInput {
@@ -805,6 +784,12 @@ export default gql`
     connect: [PostWhereUniqueInput!]
   }
 
+  input FileUploadUncheckedCreateNestedOneWithoutAuthorInput {
+    create: FileUploadCreateWithoutAuthorInput
+    connectOrCreate: FileUploadCreateOrConnectWithoutAuthorInput
+    connect: FileUploadWhereUniqueInput
+  }
+
   input StringFieldUpdateOperationsInput {
     set: String
   }
@@ -860,46 +845,30 @@ export default gql`
     deleteMany: [PostScalarWhereInput!]
   }
 
-  input UserCreateNestedManyWithoutAvatarInput {
-    create: [UserCreateWithoutAvatarInput!]
-    connectOrCreate: [UserCreateOrConnectWithoutAvatarInput!]
-    createMany: UserCreateManyAvatarInputEnvelope
-    connect: [UserWhereUniqueInput!]
+  input FileUploadUncheckedUpdateOneWithoutAuthorNestedInput {
+    create: FileUploadCreateWithoutAuthorInput
+    connectOrCreate: FileUploadCreateOrConnectWithoutAuthorInput
+    upsert: FileUploadUpsertWithoutAuthorInput
+    disconnect: FileUploadWhereInput
+    delete: FileUploadWhereInput
+    connect: FileUploadWhereUniqueInput
+    update: FileUploadUpdateToOneWithWhereWithoutAuthorInput
   }
 
-  input UserUncheckedCreateNestedManyWithoutAvatarInput {
-    create: [UserCreateWithoutAvatarInput!]
-    connectOrCreate: [UserCreateOrConnectWithoutAvatarInput!]
-    createMany: UserCreateManyAvatarInputEnvelope
-    connect: [UserWhereUniqueInput!]
+  input UserCreateNestedOneWithoutAvatarInput {
+    create: UserCreateWithoutAvatarInput
+    connectOrCreate: UserCreateOrConnectWithoutAvatarInput
+    connect: UserWhereUniqueInput
   }
 
-  input UserUpdateManyWithoutAvatarNestedInput {
-    create: [UserCreateWithoutAvatarInput!]
-    connectOrCreate: [UserCreateOrConnectWithoutAvatarInput!]
-    upsert: [UserUpsertWithWhereUniqueWithoutAvatarInput!]
-    createMany: UserCreateManyAvatarInputEnvelope
-    set: [UserWhereUniqueInput!]
-    disconnect: [UserWhereUniqueInput!]
-    delete: [UserWhereUniqueInput!]
-    connect: [UserWhereUniqueInput!]
-    update: [UserUpdateWithWhereUniqueWithoutAvatarInput!]
-    updateMany: [UserUpdateManyWithWhereWithoutAvatarInput!]
-    deleteMany: [UserScalarWhereInput!]
-  }
-
-  input UserUncheckedUpdateManyWithoutAvatarNestedInput {
-    create: [UserCreateWithoutAvatarInput!]
-    connectOrCreate: [UserCreateOrConnectWithoutAvatarInput!]
-    upsert: [UserUpsertWithWhereUniqueWithoutAvatarInput!]
-    createMany: UserCreateManyAvatarInputEnvelope
-    set: [UserWhereUniqueInput!]
-    disconnect: [UserWhereUniqueInput!]
-    delete: [UserWhereUniqueInput!]
-    connect: [UserWhereUniqueInput!]
-    update: [UserUpdateWithWhereUniqueWithoutAvatarInput!]
-    updateMany: [UserUpdateManyWithWhereWithoutAvatarInput!]
-    deleteMany: [UserScalarWhereInput!]
+  input UserUpdateOneWithoutAvatarNestedInput {
+    create: UserCreateWithoutAvatarInput
+    connectOrCreate: UserCreateOrConnectWithoutAvatarInput
+    upsert: UserUpsertWithoutAvatarInput
+    disconnect: UserWhereInput
+    delete: UserWhereInput
+    connect: UserWhereUniqueInput
+    update: UserUpdateToOneWithWhereWithoutAvatarInput
   }
 
   input UserCreateNestedOneWithoutPostInput {
@@ -1093,7 +1062,6 @@ export default gql`
     thumbnailPathUrl: String
     createdAt: DateTime
     updatedAt: DateTime
-    authorId: String!
   }
 
   input FileUploadUncheckedCreateWithoutAuthorInput {
@@ -1103,7 +1071,6 @@ export default gql`
     thumbnailPathUrl: String
     createdAt: DateTime
     updatedAt: DateTime
-    authorId: String!
   }
 
   input FileUploadCreateOrConnectWithoutAuthorInput {
@@ -1158,7 +1125,6 @@ export default gql`
     thumbnailPathUrl: String
     createdAt: DateTime
     updatedAt: DateTime
-    authorId: String
   }
 
   input FileUploadUncheckedUpdateWithoutAuthorInput {
@@ -1168,7 +1134,6 @@ export default gql`
     thumbnailPathUrl: String
     createdAt: DateTime
     updatedAt: DateTime
-    authorId: String
   }
 
   input UserCreateWithoutAvatarInput {
@@ -1200,40 +1165,39 @@ export default gql`
     create: UserCreateWithoutAvatarInput!
   }
 
-  input UserCreateManyAvatarInputEnvelope {
-    data: [UserCreateManyAvatarInput!]!
-    skipDuplicates: Boolean
-  }
-
-  input UserUpsertWithWhereUniqueWithoutAvatarInput {
-    where: UserWhereUniqueInput!
+  input UserUpsertWithoutAvatarInput {
     update: UserUpdateWithoutAvatarInput!
     create: UserCreateWithoutAvatarInput!
+    where: UserWhereInput
   }
 
-  input UserUpdateWithWhereUniqueWithoutAvatarInput {
-    where: UserWhereUniqueInput!
+  input UserUpdateToOneWithWhereWithoutAvatarInput {
+    where: UserWhereInput
     data: UserUpdateWithoutAvatarInput!
   }
 
-  input UserUpdateManyWithWhereWithoutAvatarInput {
-    where: UserScalarWhereInput!
-    data: UserUpdateManyMutationInput!
+  input UserUpdateWithoutAvatarInput {
+    id: String
+    createdAt: DateTime
+    username: String
+    password: String
+    email: String
+    roles: [String!]
+    googleId: String
+    googleProfile: Json
+    Post: PostUpdateManyWithoutAuthorNestedInput
   }
 
-  input UserScalarWhereInput {
-    AND: [UserScalarWhereInput!]
-    OR: [UserScalarWhereInput!]
-    NOT: [UserScalarWhereInput!]
-    id: StringFilter
-    createdAt: DateTimeFilter
-    username: StringNullableFilter
-    password: StringNullableFilter
-    email: StringFilter
-    roles: StringNullableListFilter
-    googleId: StringNullableFilter
-    googleProfile: JsonNullableFilter
-    avatarId: StringNullableFilter
+  input UserUncheckedUpdateWithoutAvatarInput {
+    id: String
+    createdAt: DateTime
+    username: String
+    password: String
+    email: String
+    roles: [String!]
+    googleId: String
+    googleProfile: Json
+    Post: PostUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
   input UserCreateWithoutPostInput {
@@ -1257,7 +1221,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
-    avatarId: String
+    avatar: FileUploadUncheckedCreateNestedOneWithoutAuthorInput
   }
 
   input UserCreateOrConnectWithoutPostInput {
@@ -1297,7 +1261,7 @@ export default gql`
     roles: [String!]
     googleId: String
     googleProfile: Json
-    avatarId: String
+    avatar: FileUploadUncheckedUpdateOneWithoutAuthorNestedInput
   }
 
   input PostCreateManyAuthorInput {
@@ -1336,52 +1300,6 @@ export default gql`
     updatedAt: DateTime
   }
 
-  input UserCreateManyAvatarInput {
-    id: String
-    createdAt: DateTime
-    username: String
-    password: String
-    email: String!
-    roles: [String!]
-    googleId: String
-    googleProfile: Json
-  }
-
-  input UserUpdateWithoutAvatarInput {
-    id: String
-    createdAt: DateTime
-    username: String
-    password: String
-    email: String
-    roles: [String!]
-    googleId: String
-    googleProfile: Json
-    Post: PostUpdateManyWithoutAuthorNestedInput
-  }
-
-  input UserUncheckedUpdateWithoutAvatarInput {
-    id: String
-    createdAt: DateTime
-    username: String
-    password: String
-    email: String
-    roles: [String!]
-    googleId: String
-    googleProfile: Json
-    Post: PostUncheckedUpdateManyWithoutAuthorNestedInput
-  }
-
-  input UserUncheckedUpdateManyWithoutAvatarInput {
-    id: String
-    createdAt: DateTime
-    username: String
-    password: String
-    email: String
-    roles: [String!]
-    googleId: String
-    googleProfile: Json
-  }
-
   type AggregateUser {
     _count: UserCountAggregateOutputType
     _min: UserMinAggregateOutputType
@@ -1413,7 +1331,6 @@ export default gql`
     roles: Int!
     googleId: Int!
     googleProfile: Int!
-    avatarId: Int!
     _all: Int!
   }
 
@@ -1424,7 +1341,6 @@ export default gql`
     password: String
     email: String
     googleId: String
-    avatarId: String
   }
 
   type UserMaxAggregateOutputType {
@@ -1434,11 +1350,6 @@ export default gql`
     password: String
     email: String
     googleId: String
-    avatarId: String
-  }
-
-  type FileUploadCountOutputType {
-    author: Int!
   }
 
   type FileUploadCountAggregateOutputType {
