@@ -24,11 +24,14 @@ export type Resolvers = {
   [key: string]: { [key: string]: Resolver<any, any, any> };
 } & {
   User?: User;
+  FileUpload?: FileUpload;
   Post?: Post;
   Query?: Query;
   Mutation?: Mutation;
   AggregateUser?: AggregateUser;
   UserGroupByOutputType?: UserGroupByOutputType;
+  AggregateFileUpload?: AggregateFileUpload;
+  FileUploadGroupByOutputType?: FileUploadGroupByOutputType;
   AggregatePost?: AggregatePost;
   PostGroupByOutputType?: PostGroupByOutputType;
   AffectedRowsOutput?: AffectedRowsOutput;
@@ -36,6 +39,10 @@ export type Resolvers = {
   UserCountAggregateOutputType?: UserCountAggregateOutputType;
   UserMinAggregateOutputType?: UserMinAggregateOutputType;
   UserMaxAggregateOutputType?: UserMaxAggregateOutputType;
+  FileUploadCountOutputType?: FileUploadCountOutputType;
+  FileUploadCountAggregateOutputType?: FileUploadCountAggregateOutputType;
+  FileUploadMinAggregateOutputType?: FileUploadMinAggregateOutputType;
+  FileUploadMaxAggregateOutputType?: FileUploadMaxAggregateOutputType;
   PostCountAggregateOutputType?: PostCountAggregateOutputType;
   PostMinAggregateOutputType?: PostMinAggregateOutputType;
   PostMaxAggregateOutputType?: PostMaxAggregateOutputType;
@@ -50,9 +57,22 @@ export type User = { [key: string]: Resolver<any, any, any> } & {
   roles?: Resolver<Client.User, {}, string[] | null>;
   googleId?: Resolver<Client.User, {}, string | null>;
   googleProfile?: Resolver<Client.User, {}, any | null>;
-  avatar?: Resolver<Client.User, {}, string | null>;
+  avatarId?: Resolver<Client.User, {}, string | null>;
   Post?: Resolver<Client.User, UserPostArgs, Client.Post[] | null>;
+  avatar?: Resolver<Client.User, UserAvatarArgs, Client.FileUpload | null>;
   _count?: Resolver<Client.User, {}, Client.Prisma.UserCountOutputType>;
+};
+
+export type FileUpload = { [key: string]: Resolver<any, any, any> } & {
+  id?: Resolver<Client.FileUpload, {}, string>;
+  type?: Resolver<Client.FileUpload, {}, string>;
+  filePathUrl?: Resolver<Client.FileUpload, {}, string>;
+  thumbnailPathUrl?: Resolver<Client.FileUpload, {}, string | null>;
+  createdAt?: Resolver<Client.FileUpload, {}, Date>;
+  updatedAt?: Resolver<Client.FileUpload, {}, Date>;
+  authorId?: Resolver<Client.FileUpload, {}, string>;
+  author?: Resolver<Client.FileUpload, FileUploadAuthorArgs, Client.User[] | null>;
+  _count?: Resolver<Client.FileUpload, {}, Client.Prisma.FileUploadCountOutputType>;
 };
 
 export type Post = { [key: string]: Resolver<any, any, any> } & {
@@ -79,6 +99,30 @@ export type Query = { [key: string]: Resolver<any, any, any> } & {
   groupByUser?: Resolver<{}, GroupByUserArgs, Client.Prisma.UserGroupByOutputType[]>;
   findUniqueUser?: Resolver<{}, FindUniqueUserArgs, Client.User | null>;
   findUniqueUserOrThrow?: Resolver<{}, FindUniqueUserOrThrowArgs, Client.User | null>;
+  findFirstFileUpload?: Resolver<{}, FindFirstFileUploadArgs, Client.FileUpload | null>;
+  findFirstFileUploadOrThrow?: Resolver<
+    {},
+    FindFirstFileUploadOrThrowArgs,
+    Client.FileUpload | null
+  >;
+  findManyFileUpload?: Resolver<{}, FindManyFileUploadArgs, Client.FileUpload[]>;
+  findManyFileUploadCount?: Resolver<{}, FindManyFileUploadArgs, number>;
+  aggregateFileUpload?: Resolver<
+    {},
+    AggregateFileUploadArgs,
+    Client.Prisma.GetFileUploadAggregateType<AggregateFileUploadArgs>
+  >;
+  groupByFileUpload?: Resolver<
+    {},
+    GroupByFileUploadArgs,
+    Client.Prisma.FileUploadGroupByOutputType[]
+  >;
+  findUniqueFileUpload?: Resolver<{}, FindUniqueFileUploadArgs, Client.FileUpload | null>;
+  findUniqueFileUploadOrThrow?: Resolver<
+    {},
+    FindUniqueFileUploadOrThrowArgs,
+    Client.FileUpload | null
+  >;
   findFirstPost?: Resolver<{}, FindFirstPostArgs, Client.Post | null>;
   findFirstPostOrThrow?: Resolver<{}, FindFirstPostOrThrowArgs, Client.Post | null>;
   findManyPost?: Resolver<{}, FindManyPostArgs, Client.Post[]>;
@@ -101,6 +145,13 @@ export type Mutation = { [key: string]: Resolver<any, any, any> } & {
   updateOneUser?: Resolver<{}, UpdateOneUserArgs, Client.User | null>;
   updateManyUser?: Resolver<{}, UpdateManyUserArgs, Client.Prisma.BatchPayload>;
   deleteManyUser?: Resolver<{}, DeleteManyUserArgs, Client.Prisma.BatchPayload>;
+  createOneFileUpload?: Resolver<{}, CreateOneFileUploadArgs, Client.FileUpload>;
+  upsertOneFileUpload?: Resolver<{}, UpsertOneFileUploadArgs, Client.FileUpload>;
+  createManyFileUpload?: Resolver<{}, CreateManyFileUploadArgs, Client.Prisma.BatchPayload>;
+  deleteOneFileUpload?: Resolver<{}, DeleteOneFileUploadArgs, Client.FileUpload | null>;
+  updateOneFileUpload?: Resolver<{}, UpdateOneFileUploadArgs, Client.FileUpload | null>;
+  updateManyFileUpload?: Resolver<{}, UpdateManyFileUploadArgs, Client.Prisma.BatchPayload>;
+  deleteManyFileUpload?: Resolver<{}, DeleteManyFileUploadArgs, Client.Prisma.BatchPayload>;
   createOnePost?: Resolver<{}, CreateOnePostArgs, Client.Post>;
   upsertOnePost?: Resolver<{}, UpsertOnePostArgs, Client.Post>;
   createManyPost?: Resolver<{}, CreateManyPostArgs, Client.Prisma.BatchPayload>;
@@ -133,7 +184,7 @@ export type UserGroupByOutputType = {
   roles?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string[] | null>;
   googleId?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string | null>;
   googleProfile?: Resolver<Client.Prisma.UserGroupByOutputType, {}, any | null>;
-  avatar?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string | null>;
+  avatarId?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string | null>;
   _count?: Resolver<
     Client.Prisma.UserGroupByOutputType,
     {},
@@ -148,6 +199,51 @@ export type UserGroupByOutputType = {
     Client.Prisma.UserGroupByOutputType,
     {},
     Client.Prisma.UserMaxAggregateOutputType | null
+  >;
+};
+
+export type AggregateFileUpload = { [key: string]: Resolver<any, any, any> } & {
+  _count?: Resolver<
+    Client.Prisma.AggregateFileUpload,
+    {},
+    Client.Prisma.FileUploadCountAggregateOutputType | null
+  >;
+  _min?: Resolver<
+    Client.Prisma.AggregateFileUpload,
+    {},
+    Client.Prisma.FileUploadMinAggregateOutputType | null
+  >;
+  _max?: Resolver<
+    Client.Prisma.AggregateFileUpload,
+    {},
+    Client.Prisma.FileUploadMaxAggregateOutputType | null
+  >;
+};
+
+export type FileUploadGroupByOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.FileUploadGroupByOutputType, {}, string>;
+  type?: Resolver<Client.Prisma.FileUploadGroupByOutputType, {}, string>;
+  filePathUrl?: Resolver<Client.Prisma.FileUploadGroupByOutputType, {}, string>;
+  thumbnailPathUrl?: Resolver<Client.Prisma.FileUploadGroupByOutputType, {}, string | null>;
+  createdAt?: Resolver<Client.Prisma.FileUploadGroupByOutputType, {}, Date>;
+  updatedAt?: Resolver<Client.Prisma.FileUploadGroupByOutputType, {}, Date>;
+  authorId?: Resolver<Client.Prisma.FileUploadGroupByOutputType, {}, string>;
+  _count?: Resolver<
+    Client.Prisma.FileUploadGroupByOutputType,
+    {},
+    Client.Prisma.FileUploadCountAggregateOutputType | null
+  >;
+  _min?: Resolver<
+    Client.Prisma.FileUploadGroupByOutputType,
+    {},
+    Client.Prisma.FileUploadMinAggregateOutputType | null
+  >;
+  _max?: Resolver<
+    Client.Prisma.FileUploadGroupByOutputType,
+    {},
+    Client.Prisma.FileUploadMaxAggregateOutputType | null
   >;
 };
 
@@ -207,7 +303,7 @@ export type UserCountAggregateOutputType = {
   roles?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
   googleId?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
   googleProfile?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
-  avatar?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
+  avatarId?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
   _all?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
 };
 
@@ -220,7 +316,7 @@ export type UserMinAggregateOutputType = {
   password?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
   email?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
   googleId?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
-  avatar?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
+  avatarId?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
 };
 
 export type UserMaxAggregateOutputType = {
@@ -232,7 +328,54 @@ export type UserMaxAggregateOutputType = {
   password?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   email?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   googleId?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
-  avatar?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
+  avatarId?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
+};
+
+export type FileUploadCountOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  author?: Resolver<
+    Client.Prisma.FileUploadCountOutputType,
+    FileUploadCountOutputTypeAuthorArgs,
+    number
+  >;
+};
+
+export type FileUploadCountAggregateOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.FileUploadCountAggregateOutputType, {}, number>;
+  type?: Resolver<Client.Prisma.FileUploadCountAggregateOutputType, {}, number>;
+  filePathUrl?: Resolver<Client.Prisma.FileUploadCountAggregateOutputType, {}, number>;
+  thumbnailPathUrl?: Resolver<Client.Prisma.FileUploadCountAggregateOutputType, {}, number>;
+  createdAt?: Resolver<Client.Prisma.FileUploadCountAggregateOutputType, {}, number>;
+  updatedAt?: Resolver<Client.Prisma.FileUploadCountAggregateOutputType, {}, number>;
+  authorId?: Resolver<Client.Prisma.FileUploadCountAggregateOutputType, {}, number>;
+  _all?: Resolver<Client.Prisma.FileUploadCountAggregateOutputType, {}, number>;
+};
+
+export type FileUploadMinAggregateOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.FileUploadMinAggregateOutputType, {}, string | null>;
+  type?: Resolver<Client.Prisma.FileUploadMinAggregateOutputType, {}, string | null>;
+  filePathUrl?: Resolver<Client.Prisma.FileUploadMinAggregateOutputType, {}, string | null>;
+  thumbnailPathUrl?: Resolver<Client.Prisma.FileUploadMinAggregateOutputType, {}, string | null>;
+  createdAt?: Resolver<Client.Prisma.FileUploadMinAggregateOutputType, {}, Date | null>;
+  updatedAt?: Resolver<Client.Prisma.FileUploadMinAggregateOutputType, {}, Date | null>;
+  authorId?: Resolver<Client.Prisma.FileUploadMinAggregateOutputType, {}, string | null>;
+};
+
+export type FileUploadMaxAggregateOutputType = {
+  [key: string]: Resolver<any, any, any>;
+} & {
+  id?: Resolver<Client.Prisma.FileUploadMaxAggregateOutputType, {}, string | null>;
+  type?: Resolver<Client.Prisma.FileUploadMaxAggregateOutputType, {}, string | null>;
+  filePathUrl?: Resolver<Client.Prisma.FileUploadMaxAggregateOutputType, {}, string | null>;
+  thumbnailPathUrl?: Resolver<Client.Prisma.FileUploadMaxAggregateOutputType, {}, string | null>;
+  createdAt?: Resolver<Client.Prisma.FileUploadMaxAggregateOutputType, {}, Date | null>;
+  updatedAt?: Resolver<Client.Prisma.FileUploadMaxAggregateOutputType, {}, Date | null>;
+  authorId?: Resolver<Client.Prisma.FileUploadMaxAggregateOutputType, {}, string | null>;
 };
 
 export type PostCountAggregateOutputType = {
@@ -277,6 +420,19 @@ export type UserPostArgs = {
   take?: number;
   skip?: number;
   distinct?: PostScalarFieldEnum[];
+};
+
+export type UserAvatarArgs = {
+  where?: FileUploadWhereInput;
+};
+
+export type FileUploadAuthorArgs = {
+  where?: UserWhereInput;
+  orderBy?: UserOrderByWithRelationInput[];
+  cursor?: UserWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: UserScalarFieldEnum[];
 };
 
 export type FindFirstUserArgs = {
@@ -332,6 +488,61 @@ export type FindUniqueUserArgs = {
 
 export type FindUniqueUserOrThrowArgs = {
   where: UserWhereUniqueInput;
+};
+
+export type FindFirstFileUploadArgs = {
+  where?: FileUploadWhereInput;
+  orderBy?: FileUploadOrderByWithRelationInput[];
+  cursor?: FileUploadWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: FileUploadScalarFieldEnum[];
+};
+
+export type FindFirstFileUploadOrThrowArgs = {
+  where?: FileUploadWhereInput;
+  orderBy?: FileUploadOrderByWithRelationInput[];
+  cursor?: FileUploadWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: FileUploadScalarFieldEnum[];
+};
+
+export type FindManyFileUploadArgs = {
+  where?: FileUploadWhereInput;
+  orderBy?: FileUploadOrderByWithRelationInput[];
+  cursor?: FileUploadWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: FileUploadScalarFieldEnum[];
+};
+
+export type AggregateFileUploadArgs = {
+  where?: FileUploadWhereInput;
+  orderBy?: FileUploadOrderByWithRelationInput[];
+  cursor?: FileUploadWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  _count?: Client.Prisma.FileUploadCountAggregateInputType;
+  _min?: Client.Prisma.FileUploadMinAggregateInputType;
+  _max?: Client.Prisma.FileUploadMaxAggregateInputType;
+};
+
+export type GroupByFileUploadArgs = {
+  where?: FileUploadWhereInput;
+  orderBy?: FileUploadOrderByWithAggregationInput[];
+  by: FileUploadScalarFieldEnum[];
+  having?: FileUploadScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+};
+
+export type FindUniqueFileUploadArgs = {
+  where: FileUploadWhereUniqueInput;
+};
+
+export type FindUniqueFileUploadOrThrowArgs = {
+  where: FileUploadWhereUniqueInput;
 };
 
 export type FindFirstPostArgs = {
@@ -422,6 +633,39 @@ export type DeleteManyUserArgs = {
   where?: UserWhereInput;
 };
 
+export type CreateOneFileUploadArgs = {
+  data: FileUploadCreateInput;
+};
+
+export type UpsertOneFileUploadArgs = {
+  where: FileUploadWhereUniqueInput;
+  create: FileUploadCreateInput;
+  update: FileUploadUpdateInput;
+};
+
+export type CreateManyFileUploadArgs = {
+  data: FileUploadCreateManyInput[];
+  skipDuplicates?: boolean;
+};
+
+export type DeleteOneFileUploadArgs = {
+  where: FileUploadWhereUniqueInput;
+};
+
+export type UpdateOneFileUploadArgs = {
+  data: FileUploadUpdateInput;
+  where: FileUploadWhereUniqueInput;
+};
+
+export type UpdateManyFileUploadArgs = {
+  data: FileUploadUpdateManyMutationInput;
+  where?: FileUploadWhereInput;
+};
+
+export type DeleteManyFileUploadArgs = {
+  where?: FileUploadWhereInput;
+};
+
 export type CreateOnePostArgs = {
   data: PostCreateInput;
 };
@@ -469,6 +713,10 @@ export type UserCountOutputTypePostArgs = {
   where?: PostWhereInput;
 };
 
+export type FileUploadCountOutputTypeAuthorArgs = {
+  where?: UserWhereInput;
+};
+
 export type UserWhereInput = {
   AND?: UserWhereInput[];
   OR?: UserWhereInput[];
@@ -481,8 +729,9 @@ export type UserWhereInput = {
   roles?: StringNullableListFilter;
   googleId?: StringNullableFilter | null;
   googleProfile?: JsonNullableFilter;
-  avatar?: StringNullableFilter | null;
+  avatarId?: StringNullableFilter | null;
   Post?: PostListRelationFilter;
+  avatar?: FileUploadNullableRelationFilter | null;
 };
 
 export type UserOrderByWithRelationInput = {
@@ -494,8 +743,9 @@ export type UserOrderByWithRelationInput = {
   roles?: SortOrder;
   googleId?: SortOrderInput;
   googleProfile?: SortOrderInput;
-  avatar?: SortOrderInput;
+  avatarId?: SortOrderInput;
   Post?: PostOrderByRelationAggregateInput;
+  avatar?: FileUploadOrderByWithRelationInput;
 };
 
 export type UserWhereUniqueInput = AtLeast<
@@ -511,8 +761,9 @@ export type UserWhereUniqueInput = AtLeast<
     password?: StringNullableFilter | null;
     roles?: StringNullableListFilter;
     googleProfile?: JsonNullableFilter;
-    avatar?: StringNullableFilter | null;
+    avatarId?: StringNullableFilter | null;
     Post?: PostListRelationFilter;
+    avatar?: FileUploadNullableRelationFilter | null;
   },
   'id' | 'username' | 'email' | 'googleId'
 >;
@@ -526,7 +777,7 @@ export type UserOrderByWithAggregationInput = {
   roles?: SortOrder;
   googleId?: SortOrderInput;
   googleProfile?: SortOrderInput;
-  avatar?: SortOrderInput;
+  avatarId?: SortOrderInput;
   _count?: UserCountOrderByAggregateInput;
   _max?: UserMaxOrderByAggregateInput;
   _min?: UserMinOrderByAggregateInput;
@@ -544,7 +795,75 @@ export type UserScalarWhereWithAggregatesInput = {
   roles?: StringNullableListFilter;
   googleId?: StringNullableWithAggregatesFilter | null;
   googleProfile?: JsonNullableWithAggregatesFilter;
-  avatar?: StringNullableWithAggregatesFilter | null;
+  avatarId?: StringNullableWithAggregatesFilter | null;
+};
+
+export type FileUploadWhereInput = {
+  AND?: FileUploadWhereInput[];
+  OR?: FileUploadWhereInput[];
+  NOT?: FileUploadWhereInput[];
+  id?: StringFilter;
+  type?: StringFilter;
+  filePathUrl?: StringFilter;
+  thumbnailPathUrl?: StringNullableFilter | null;
+  createdAt?: DateTimeFilter;
+  updatedAt?: DateTimeFilter;
+  authorId?: StringFilter;
+  author?: UserListRelationFilter;
+};
+
+export type FileUploadOrderByWithRelationInput = {
+  id?: SortOrder;
+  type?: SortOrder;
+  filePathUrl?: SortOrder;
+  thumbnailPathUrl?: SortOrderInput;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+  author?: UserOrderByRelationAggregateInput;
+};
+
+export type FileUploadWhereUniqueInput = AtLeast<
+  {
+    id?: string;
+    AND?: FileUploadWhereInput[];
+    OR?: FileUploadWhereInput[];
+    NOT?: FileUploadWhereInput[];
+    type?: StringFilter;
+    filePathUrl?: StringFilter;
+    thumbnailPathUrl?: StringNullableFilter | null;
+    createdAt?: DateTimeFilter;
+    updatedAt?: DateTimeFilter;
+    authorId?: StringFilter;
+    author?: UserListRelationFilter;
+  },
+  'id'
+>;
+
+export type FileUploadOrderByWithAggregationInput = {
+  id?: SortOrder;
+  type?: SortOrder;
+  filePathUrl?: SortOrder;
+  thumbnailPathUrl?: SortOrderInput;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+  _count?: FileUploadCountOrderByAggregateInput;
+  _max?: FileUploadMaxOrderByAggregateInput;
+  _min?: FileUploadMinOrderByAggregateInput;
+};
+
+export type FileUploadScalarWhereWithAggregatesInput = {
+  AND?: FileUploadScalarWhereWithAggregatesInput[];
+  OR?: FileUploadScalarWhereWithAggregatesInput[];
+  NOT?: FileUploadScalarWhereWithAggregatesInput[];
+  id?: StringWithAggregatesFilter;
+  type?: StringWithAggregatesFilter;
+  filePathUrl?: StringWithAggregatesFilter;
+  thumbnailPathUrl?: StringNullableWithAggregatesFilter | null;
+  createdAt?: DateTimeWithAggregatesFilter;
+  updatedAt?: DateTimeWithAggregatesFilter;
+  authorId?: StringWithAggregatesFilter;
 };
 
 export type PostWhereInput = {
@@ -624,8 +943,8 @@ export type UserCreateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
   Post?: PostCreateNestedManyWithoutAuthorInput;
+  avatar?: FileUploadCreateNestedOneWithoutAuthorInput;
 };
 
 export type UserUncheckedCreateInput = {
@@ -637,7 +956,7 @@ export type UserUncheckedCreateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
+  avatarId?: string | null;
   Post?: PostUncheckedCreateNestedManyWithoutAuthorInput;
 };
 
@@ -650,8 +969,8 @@ export type UserUpdateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
   Post?: PostUpdateManyWithoutAuthorNestedInput;
+  avatar?: FileUploadUpdateOneWithoutAuthorNestedInput;
 };
 
 export type UserUncheckedUpdateInput = {
@@ -663,7 +982,7 @@ export type UserUncheckedUpdateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
+  avatarId?: string | null;
   Post?: PostUncheckedUpdateManyWithoutAuthorNestedInput;
 };
 
@@ -676,7 +995,7 @@ export type UserCreateManyInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
+  avatarId?: string | null;
 };
 
 export type UserUpdateManyMutationInput = {
@@ -688,7 +1007,6 @@ export type UserUpdateManyMutationInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
 };
 
 export type UserUncheckedUpdateManyInput = {
@@ -700,7 +1018,81 @@ export type UserUncheckedUpdateManyInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
+  avatarId?: string | null;
+};
+
+export type FileUploadCreateInput = {
+  id?: string;
+  type: string;
+  filePathUrl: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId: string;
+  author?: UserCreateNestedManyWithoutAvatarInput;
+};
+
+export type FileUploadUncheckedCreateInput = {
+  id?: string;
+  type: string;
+  filePathUrl: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId: string;
+  author?: UserUncheckedCreateNestedManyWithoutAvatarInput;
+};
+
+export type FileUploadUpdateInput = {
+  id?: string;
+  type?: string;
+  filePathUrl?: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId?: string;
+  author?: UserUpdateManyWithoutAvatarNestedInput;
+};
+
+export type FileUploadUncheckedUpdateInput = {
+  id?: string;
+  type?: string;
+  filePathUrl?: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId?: string;
+  author?: UserUncheckedUpdateManyWithoutAvatarNestedInput;
+};
+
+export type FileUploadCreateManyInput = {
+  id?: string;
+  type: string;
+  filePathUrl: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId: string;
+};
+
+export type FileUploadUpdateManyMutationInput = {
+  id?: string;
+  type?: string;
+  filePathUrl?: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId?: string;
+};
+
+export type FileUploadUncheckedUpdateManyInput = {
+  id?: string;
+  type?: string;
+  filePathUrl?: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId?: string;
 };
 
 export type PostCreateInput = {
@@ -843,6 +1235,11 @@ export type PostListRelationFilter = {
   none?: PostWhereInput;
 };
 
+export type FileUploadNullableRelationFilter = {
+  is?: FileUploadWhereInput | null;
+  isNot?: FileUploadWhereInput | null;
+};
+
 export type SortOrderInput = {
   sort: SortOrder;
   nulls?: NullsOrder;
@@ -861,7 +1258,7 @@ export type UserCountOrderByAggregateInput = {
   roles?: SortOrder;
   googleId?: SortOrder;
   googleProfile?: SortOrder;
-  avatar?: SortOrder;
+  avatarId?: SortOrder;
 };
 
 export type UserMaxOrderByAggregateInput = {
@@ -871,7 +1268,7 @@ export type UserMaxOrderByAggregateInput = {
   password?: SortOrder;
   email?: SortOrder;
   googleId?: SortOrder;
-  avatar?: SortOrder;
+  avatarId?: SortOrder;
 };
 
 export type UserMinOrderByAggregateInput = {
@@ -881,7 +1278,7 @@ export type UserMinOrderByAggregateInput = {
   password?: SortOrder;
   email?: SortOrder;
   googleId?: SortOrder;
-  avatar?: SortOrder;
+  avatarId?: SortOrder;
 };
 
 export type StringWithAggregatesFilter = {
@@ -953,6 +1350,46 @@ export type JsonNullableWithAggregatesFilter = {
   _max?: NestedJsonNullableFilter;
 };
 
+export type UserListRelationFilter = {
+  every?: UserWhereInput;
+  some?: UserWhereInput;
+  none?: UserWhereInput;
+};
+
+export type UserOrderByRelationAggregateInput = {
+  _count?: SortOrder;
+};
+
+export type FileUploadCountOrderByAggregateInput = {
+  id?: SortOrder;
+  type?: SortOrder;
+  filePathUrl?: SortOrder;
+  thumbnailPathUrl?: SortOrder;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+};
+
+export type FileUploadMaxOrderByAggregateInput = {
+  id?: SortOrder;
+  type?: SortOrder;
+  filePathUrl?: SortOrder;
+  thumbnailPathUrl?: SortOrder;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+};
+
+export type FileUploadMinOrderByAggregateInput = {
+  id?: SortOrder;
+  type?: SortOrder;
+  filePathUrl?: SortOrder;
+  thumbnailPathUrl?: SortOrder;
+  createdAt?: SortOrder;
+  updatedAt?: SortOrder;
+  authorId?: SortOrder;
+};
+
 export type BoolFilter = {
   equals?: boolean;
   not?: NestedBoolFilter;
@@ -1010,6 +1447,12 @@ export type PostCreateNestedManyWithoutAuthorInput = {
   connect?: PostWhereUniqueInput[];
 };
 
+export type FileUploadCreateNestedOneWithoutAuthorInput = {
+  create?: FileUploadCreateWithoutAuthorInput;
+  connectOrCreate?: FileUploadCreateOrConnectWithoutAuthorInput;
+  connect?: FileUploadWhereUniqueInput;
+};
+
 export type PostUncheckedCreateNestedManyWithoutAuthorInput = {
   create?: PostCreateWithoutAuthorInput[];
   connectOrCreate?: PostCreateOrConnectWithoutAuthorInput[];
@@ -1048,6 +1491,16 @@ export type PostUpdateManyWithoutAuthorNestedInput = {
   deleteMany?: PostScalarWhereInput[];
 };
 
+export type FileUploadUpdateOneWithoutAuthorNestedInput = {
+  create?: FileUploadCreateWithoutAuthorInput;
+  connectOrCreate?: FileUploadCreateOrConnectWithoutAuthorInput;
+  upsert?: FileUploadUpsertWithoutAuthorInput;
+  disconnect?: FileUploadWhereInput;
+  delete?: FileUploadWhereInput;
+  connect?: FileUploadWhereUniqueInput;
+  update?: FileUploadUpdateToOneWithWhereWithoutAuthorInput;
+};
+
 export type PostUncheckedUpdateManyWithoutAuthorNestedInput = {
   create?: PostCreateWithoutAuthorInput[];
   connectOrCreate?: PostCreateOrConnectWithoutAuthorInput[];
@@ -1060,6 +1513,48 @@ export type PostUncheckedUpdateManyWithoutAuthorNestedInput = {
   update?: PostUpdateWithWhereUniqueWithoutAuthorInput[];
   updateMany?: PostUpdateManyWithWhereWithoutAuthorInput[];
   deleteMany?: PostScalarWhereInput[];
+};
+
+export type UserCreateNestedManyWithoutAvatarInput = {
+  create?: UserCreateWithoutAvatarInput[];
+  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput[];
+  createMany?: UserCreateManyAvatarInputEnvelope;
+  connect?: UserWhereUniqueInput[];
+};
+
+export type UserUncheckedCreateNestedManyWithoutAvatarInput = {
+  create?: UserCreateWithoutAvatarInput[];
+  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput[];
+  createMany?: UserCreateManyAvatarInputEnvelope;
+  connect?: UserWhereUniqueInput[];
+};
+
+export type UserUpdateManyWithoutAvatarNestedInput = {
+  create?: UserCreateWithoutAvatarInput[];
+  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput[];
+  upsert?: UserUpsertWithWhereUniqueWithoutAvatarInput[];
+  createMany?: UserCreateManyAvatarInputEnvelope;
+  set?: UserWhereUniqueInput[];
+  disconnect?: UserWhereUniqueInput[];
+  delete?: UserWhereUniqueInput[];
+  connect?: UserWhereUniqueInput[];
+  update?: UserUpdateWithWhereUniqueWithoutAvatarInput[];
+  updateMany?: UserUpdateManyWithWhereWithoutAvatarInput[];
+  deleteMany?: UserScalarWhereInput[];
+};
+
+export type UserUncheckedUpdateManyWithoutAvatarNestedInput = {
+  create?: UserCreateWithoutAvatarInput[];
+  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput[];
+  upsert?: UserUpsertWithWhereUniqueWithoutAvatarInput[];
+  createMany?: UserCreateManyAvatarInputEnvelope;
+  set?: UserWhereUniqueInput[];
+  disconnect?: UserWhereUniqueInput[];
+  delete?: UserWhereUniqueInput[];
+  connect?: UserWhereUniqueInput[];
+  update?: UserUpdateWithWhereUniqueWithoutAvatarInput[];
+  updateMany?: UserUpdateManyWithWhereWithoutAvatarInput[];
+  deleteMany?: UserScalarWhereInput[];
 };
 
 export type UserCreateNestedOneWithoutPostInput = {
@@ -1246,6 +1741,31 @@ export type PostCreateManyAuthorInputEnvelope = {
   skipDuplicates?: boolean;
 };
 
+export type FileUploadCreateWithoutAuthorInput = {
+  id?: string;
+  type: string;
+  filePathUrl: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId: string;
+};
+
+export type FileUploadUncheckedCreateWithoutAuthorInput = {
+  id?: string;
+  type: string;
+  filePathUrl: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId: string;
+};
+
+export type FileUploadCreateOrConnectWithoutAuthorInput = {
+  where: FileUploadWhereUniqueInput;
+  create: FileUploadCreateWithoutAuthorInput;
+};
+
 export type PostUpsertWithWhereUniqueWithoutAuthorInput = {
   where: PostWhereUniqueInput;
   update: PostUpdateWithoutAuthorInput;
@@ -1275,6 +1795,102 @@ export type PostScalarWhereInput = {
   authorId?: StringFilter;
 };
 
+export type FileUploadUpsertWithoutAuthorInput = {
+  update: FileUploadUpdateWithoutAuthorInput;
+  create: FileUploadCreateWithoutAuthorInput;
+  where?: FileUploadWhereInput;
+};
+
+export type FileUploadUpdateToOneWithWhereWithoutAuthorInput = {
+  where?: FileUploadWhereInput;
+  data: FileUploadUpdateWithoutAuthorInput;
+};
+
+export type FileUploadUpdateWithoutAuthorInput = {
+  id?: string;
+  type?: string;
+  filePathUrl?: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId?: string;
+};
+
+export type FileUploadUncheckedUpdateWithoutAuthorInput = {
+  id?: string;
+  type?: string;
+  filePathUrl?: string;
+  thumbnailPathUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  authorId?: string;
+};
+
+export type UserCreateWithoutAvatarInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+  Post?: PostCreateNestedManyWithoutAuthorInput;
+};
+
+export type UserUncheckedCreateWithoutAvatarInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+  Post?: PostUncheckedCreateNestedManyWithoutAuthorInput;
+};
+
+export type UserCreateOrConnectWithoutAvatarInput = {
+  where: UserWhereUniqueInput;
+  create: UserCreateWithoutAvatarInput;
+};
+
+export type UserCreateManyAvatarInputEnvelope = {
+  data: UserCreateManyAvatarInput[];
+  skipDuplicates?: boolean;
+};
+
+export type UserUpsertWithWhereUniqueWithoutAvatarInput = {
+  where: UserWhereUniqueInput;
+  update: UserUpdateWithoutAvatarInput;
+  create: UserCreateWithoutAvatarInput;
+};
+
+export type UserUpdateWithWhereUniqueWithoutAvatarInput = {
+  where: UserWhereUniqueInput;
+  data: UserUpdateWithoutAvatarInput;
+};
+
+export type UserUpdateManyWithWhereWithoutAvatarInput = {
+  where: UserScalarWhereInput;
+  data: UserUpdateManyMutationInput;
+};
+
+export type UserScalarWhereInput = {
+  AND?: UserScalarWhereInput[];
+  OR?: UserScalarWhereInput[];
+  NOT?: UserScalarWhereInput[];
+  id?: StringFilter;
+  createdAt?: DateTimeFilter;
+  username?: StringNullableFilter | null;
+  password?: StringNullableFilter | null;
+  email?: StringFilter;
+  roles?: StringNullableListFilter;
+  googleId?: StringNullableFilter | null;
+  googleProfile?: JsonNullableFilter;
+  avatarId?: StringNullableFilter | null;
+};
+
 export type UserCreateWithoutPostInput = {
   id?: string;
   createdAt?: Date;
@@ -1284,7 +1900,7 @@ export type UserCreateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
+  avatar?: FileUploadCreateNestedOneWithoutAuthorInput;
 };
 
 export type UserUncheckedCreateWithoutPostInput = {
@@ -1296,7 +1912,7 @@ export type UserUncheckedCreateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
+  avatarId?: string | null;
 };
 
 export type UserCreateOrConnectWithoutPostInput = {
@@ -1324,7 +1940,7 @@ export type UserUpdateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
+  avatar?: FileUploadUpdateOneWithoutAuthorNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutPostInput = {
@@ -1336,7 +1952,7 @@ export type UserUncheckedUpdateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatar?: string | null;
+  avatarId?: string | null;
 };
 
 export type PostCreateManyAuthorInput = {
@@ -1375,6 +1991,52 @@ export type PostUncheckedUpdateManyWithoutAuthorInput = {
   updatedAt?: Date;
 };
 
+export type UserCreateManyAvatarInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+};
+
+export type UserUpdateWithoutAvatarInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email?: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+  Post?: PostUpdateManyWithoutAuthorNestedInput;
+};
+
+export type UserUncheckedUpdateWithoutAvatarInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email?: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+  Post?: PostUncheckedUpdateManyWithoutAuthorNestedInput;
+};
+
+export type UserUncheckedUpdateManyWithoutAvatarInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email?: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+};
+
 export enum TransactionIsolationLevel {
   ReadUncommitted = 'ReadUncommitted',
   ReadCommitted = 'ReadCommitted',
@@ -1390,7 +2052,16 @@ export enum UserScalarFieldEnum {
   roles = 'roles',
   googleId = 'googleId',
   googleProfile = 'googleProfile',
-  avatar = 'avatar',
+  avatarId = 'avatarId',
+}
+export enum FileUploadScalarFieldEnum {
+  id = 'id',
+  type = 'type',
+  filePathUrl = 'filePathUrl',
+  thumbnailPathUrl = 'thumbnailPathUrl',
+  createdAt = 'createdAt',
+  updatedAt = 'updatedAt',
+  authorId = 'authorId',
 }
 export enum PostScalarFieldEnum {
   id = 'id',
