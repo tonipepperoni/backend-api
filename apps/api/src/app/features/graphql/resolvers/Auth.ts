@@ -61,9 +61,11 @@ export const typeDefs = gql`
   }
 
   type AccountInfo {
-    username: String
-    hasPassword: Boolean!
-    googleProfile: GoogleProfile
+    id: String!
+    username: String!
+    email: String
+    avatar: FileUpload
+    createdAt: DateTime!
   }
 
   input AuthLoginInput {
@@ -99,7 +101,7 @@ export const typeDefs = gql`
 
 @Resolver()
 @UseGuards(GqlThrottlerGuard)
-@Throttle()
+@Throttle(100, 100)
 export class AuthResolver {
   constructor(
     private readonly auth: AuthService,
@@ -141,17 +143,26 @@ export class AuthResolver {
   @Query()
   @UseGuards(RolesGuard())
   async accountInfo(@CurrentUser() reqUser: RequestUser) {
+    console.log('req')
     const user = await this.prisma.user.findUnique({
       where: { id: reqUser.id },
-      select: { username: true, password: true, googleProfile: true },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        avatar: true,
+        createdAt: true
+      },
     });
 
     if (!user) throw new UnauthorizedException('User not found');
 
     return {
+      id: user.id,
+      email: user.email,
       username: user.username,
-      hasPassword: !!user.password,
-      googleProfile: user.googleProfile as AccountInfo['googleProfile'],
+      avatar: user.avatar,
+      createdAt: user.createdAt
     } satisfies AccountInfo;
   }
 

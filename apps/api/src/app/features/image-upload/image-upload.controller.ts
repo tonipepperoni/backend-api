@@ -7,7 +7,7 @@ import { diskStorage } from 'multer';
 import { extname } from "@angular-devkit/core";
 
 @Controller()
-@UseGuards(RolesGuard(''))
+@UseGuards(RolesGuard())
 export class ImageUploadController {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -19,36 +19,43 @@ export class ImageUploadController {
         // Generating a 32 random chars long string
         const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
         //Calling the callback passing the random name generated with the original extension name
-        // @ts-ignore
-        cb(null, `${randomName}${extname(file.originalname)}`)
+        cb(null, `${file.originalname}`)
       }
     })
   }))
   async uploadFile(@CurrentUser()  user: RequestUser, @UploadedFile()  file: Express.Multer.File) {
     try {
-      //
-       console.log(user, file)
-      // const uploadPath = path.join(__dirname, '../../../apps/api/src/uploads'); // Define your upload path
-      // const fileName = `${uuid4()}.png`;
-      //
-      // // Save file to the file system
-      // const writeStream = createWriteStream(filePath);
-      // writeStream.write(file.buffer);
-      //
+      console.log(file)
        const filePathUrl = `uploads/${file.filename}`; // Relative path for the database
 
-      // Create a database record for the file
-      const uploadedFile = await this.prisma.fileUpload.create({
-        data: {
+      // // Create a database record for the file
+      // await this.prisma.fileUpload.create({
+      //   data: {
+      //     type: file.mimetype,
+      //     filePathUrl: filePathUrl,
+      //     authorId: user.id
+      //     // Add other fields as needed
+      //   },
+      // });
+
+      await this.prisma.fileUpload.upsert({
+        where: {
+          authorId: user.id
+        },
+        create: {
           type: file.mimetype,
           filePathUrl: filePathUrl,
           authorId: user.id
-          // Add other fields as needed
         },
+        update: {
+          type: file.mimetype,
+          filePathUrl: filePathUrl,
+          authorId: user.id
+        }
       });
+
       // You can update the database with the filePathUrl
       // Prisma update operation goes here
-
       return {filePathUrl}; // Return the file path for response
     }catch (e) {
       console.log(e)

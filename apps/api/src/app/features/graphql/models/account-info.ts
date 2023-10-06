@@ -1,7 +1,9 @@
-import { Profile } from 'passport-google-oauth20';
+import { FileUpload } from "../../prisma";
 
 export interface AccountInfo {
-  username?: string | null;
-  hasPassword: boolean;
-  googleProfile?: Profile['_json'] | null;
+  id: string
+  email: string
+  username: string | null
+  createdAt: Date
+  avatar?: FileUpload | null,
 }

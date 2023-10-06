@@ -9,15 +9,7 @@ export default gql`
     createdAt: DateTime!
     updatedAt: DateTime!
     authorId: String!
-    author(
-      where: UserWhereInput
-      orderBy: [UserOrderByWithRelationInput]
-      cursor: UserWhereUniqueInput
-      take: Int
-      skip: Int
-      distinct: [UserScalarFieldEnum]
-    ): [User!]!
-    _count: FileUploadCountOutputType!
+    author(where: UserWhereInput): User
   }
 
   type Query {
