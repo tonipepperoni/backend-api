@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { ConfigService } from './config.service';
 
 @Global()
