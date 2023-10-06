@@ -3,7 +3,7 @@ import { PrismaSelect } from '@paljs/plugins';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { PalDefaultFields } from './default-fields';
-import { Prisma } from './generated';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaSelectService {

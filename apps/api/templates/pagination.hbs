@@ -1,0 +1,6 @@
+import { ObjectType } from '@nestjs/graphql';
+import PaginatedResponse from '../../../../common/pagination/pagination';
+import { {{ pascalCase modelName }} } from '../entity/{{ kebabCase modelName }}.model';
+
+@ObjectType()
+export class {{ pascalCase modelName }}Connection extends PaginatedResponse({{ pascalCase modelName }}) {}
