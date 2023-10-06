@@ -10,7 +10,6 @@ export default gql`
     roles: [String!]!
     googleId: String
     googleProfile: Json
-    avatarId: String
     Post(
       where: PostWhereInput
       orderBy: [PostOrderByWithRelationInput]

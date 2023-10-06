@@ -71,6 +71,7 @@ export class UserResolver {
     @Args() args: NonNullableFields<FindFirstUserArgs>,
     @Info() info: GraphQLResolveInfo
   ) {
+    console.log('findFirstUser', args)
     return this.prisma.user.findFirst(this.prismaSelect.getArgs(info, args));
   }
 
@@ -125,5 +126,4 @@ export class UserResolver {
   async deleteManyUser(@Args() args: DeleteManyUserArgs, @Info() info: GraphQLResolveInfo) {
     return this.prisma.user.deleteMany(this.prismaSelect.getArgs(info, args));
   }
-
 }

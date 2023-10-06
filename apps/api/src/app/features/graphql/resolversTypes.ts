@@ -39,7 +39,6 @@ export type Resolvers = {
   UserCountAggregateOutputType?: UserCountAggregateOutputType;
   UserMinAggregateOutputType?: UserMinAggregateOutputType;
   UserMaxAggregateOutputType?: UserMaxAggregateOutputType;
-  FileUploadCountOutputType?: FileUploadCountOutputType;
   FileUploadCountAggregateOutputType?: FileUploadCountAggregateOutputType;
   FileUploadMinAggregateOutputType?: FileUploadMinAggregateOutputType;
   FileUploadMaxAggregateOutputType?: FileUploadMaxAggregateOutputType;
@@ -57,7 +56,6 @@ export type User = { [key: string]: Resolver<any, any, any> } & {
   roles?: Resolver<Client.User, {}, string[] | null>;
   googleId?: Resolver<Client.User, {}, string | null>;
   googleProfile?: Resolver<Client.User, {}, any | null>;
-  avatarId?: Resolver<Client.User, {}, string | null>;
   Post?: Resolver<Client.User, UserPostArgs, Client.Post[] | null>;
   avatar?: Resolver<Client.User, UserAvatarArgs, Client.FileUpload | null>;
   _count?: Resolver<Client.User, {}, Client.Prisma.UserCountOutputType>;
@@ -71,8 +69,7 @@ export type FileUpload = { [key: string]: Resolver<any, any, any> } & {
   createdAt?: Resolver<Client.FileUpload, {}, Date>;
   updatedAt?: Resolver<Client.FileUpload, {}, Date>;
   authorId?: Resolver<Client.FileUpload, {}, string>;
-  author?: Resolver<Client.FileUpload, FileUploadAuthorArgs, Client.User[] | null>;
-  _count?: Resolver<Client.FileUpload, {}, Client.Prisma.FileUploadCountOutputType>;
+  author?: Resolver<Client.FileUpload, FileUploadAuthorArgs, Client.User | null>;
 };
 
 export type Post = { [key: string]: Resolver<any, any, any> } & {
@@ -184,7 +181,6 @@ export type UserGroupByOutputType = {
   roles?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string[] | null>;
   googleId?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string | null>;
   googleProfile?: Resolver<Client.Prisma.UserGroupByOutputType, {}, any | null>;
-  avatarId?: Resolver<Client.Prisma.UserGroupByOutputType, {}, string | null>;
   _count?: Resolver<
     Client.Prisma.UserGroupByOutputType,
     {},
@@ -303,7 +299,6 @@ export type UserCountAggregateOutputType = {
   roles?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
   googleId?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
   googleProfile?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
-  avatarId?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
   _all?: Resolver<Client.Prisma.UserCountAggregateOutputType, {}, number>;
 };
 
@@ -316,7 +311,6 @@ export type UserMinAggregateOutputType = {
   password?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
   email?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
   googleId?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
-  avatarId?: Resolver<Client.Prisma.UserMinAggregateOutputType, {}, string | null>;
 };
 
 export type UserMaxAggregateOutputType = {
@@ -328,17 +322,6 @@ export type UserMaxAggregateOutputType = {
   password?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   email?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
   googleId?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
-  avatarId?: Resolver<Client.Prisma.UserMaxAggregateOutputType, {}, string | null>;
-};
-
-export type FileUploadCountOutputType = {
-  [key: string]: Resolver<any, any, any>;
-} & {
-  author?: Resolver<
-    Client.Prisma.FileUploadCountOutputType,
-    FileUploadCountOutputTypeAuthorArgs,
-    number
-  >;
 };
 
 export type FileUploadCountAggregateOutputType = {
@@ -428,11 +411,6 @@ export type UserAvatarArgs = {
 
 export type FileUploadAuthorArgs = {
   where?: UserWhereInput;
-  orderBy?: UserOrderByWithRelationInput[];
-  cursor?: UserWhereUniqueInput;
-  take?: number;
-  skip?: number;
-  distinct?: UserScalarFieldEnum[];
 };
 
 export type FindFirstUserArgs = {
@@ -713,10 +691,6 @@ export type UserCountOutputTypePostArgs = {
   where?: PostWhereInput;
 };
 
-export type FileUploadCountOutputTypeAuthorArgs = {
-  where?: UserWhereInput;
-};
-
 export type UserWhereInput = {
   AND?: UserWhereInput[];
   OR?: UserWhereInput[];
@@ -729,7 +703,6 @@ export type UserWhereInput = {
   roles?: StringNullableListFilter;
   googleId?: StringNullableFilter | null;
   googleProfile?: JsonNullableFilter;
-  avatarId?: StringNullableFilter | null;
   Post?: PostListRelationFilter;
   avatar?: FileUploadNullableRelationFilter | null;
 };
@@ -743,7 +716,6 @@ export type UserOrderByWithRelationInput = {
   roles?: SortOrder;
   googleId?: SortOrderInput;
   googleProfile?: SortOrderInput;
-  avatarId?: SortOrderInput;
   Post?: PostOrderByRelationAggregateInput;
   avatar?: FileUploadOrderByWithRelationInput;
 };
@@ -761,7 +733,6 @@ export type UserWhereUniqueInput = AtLeast<
     password?: StringNullableFilter | null;
     roles?: StringNullableListFilter;
     googleProfile?: JsonNullableFilter;
-    avatarId?: StringNullableFilter | null;
     Post?: PostListRelationFilter;
     avatar?: FileUploadNullableRelationFilter | null;
   },
@@ -777,7 +748,6 @@ export type UserOrderByWithAggregationInput = {
   roles?: SortOrder;
   googleId?: SortOrderInput;
   googleProfile?: SortOrderInput;
-  avatarId?: SortOrderInput;
   _count?: UserCountOrderByAggregateInput;
   _max?: UserMaxOrderByAggregateInput;
   _min?: UserMinOrderByAggregateInput;
@@ -795,7 +765,6 @@ export type UserScalarWhereWithAggregatesInput = {
   roles?: StringNullableListFilter;
   googleId?: StringNullableWithAggregatesFilter | null;
   googleProfile?: JsonNullableWithAggregatesFilter;
-  avatarId?: StringNullableWithAggregatesFilter | null;
 };
 
 export type FileUploadWhereInput = {
@@ -809,7 +778,7 @@ export type FileUploadWhereInput = {
   createdAt?: DateTimeFilter;
   updatedAt?: DateTimeFilter;
   authorId?: StringFilter;
-  author?: UserListRelationFilter;
+  author?: UserNullableRelationFilter | null;
 };
 
 export type FileUploadOrderByWithRelationInput = {
@@ -820,12 +789,13 @@ export type FileUploadOrderByWithRelationInput = {
   createdAt?: SortOrder;
   updatedAt?: SortOrder;
   authorId?: SortOrder;
-  author?: UserOrderByRelationAggregateInput;
+  author?: UserOrderByWithRelationInput;
 };
 
 export type FileUploadWhereUniqueInput = AtLeast<
   {
     id?: string;
+    authorId?: string;
     AND?: FileUploadWhereInput[];
     OR?: FileUploadWhereInput[];
     NOT?: FileUploadWhereInput[];
@@ -834,10 +804,9 @@ export type FileUploadWhereUniqueInput = AtLeast<
     thumbnailPathUrl?: StringNullableFilter | null;
     createdAt?: DateTimeFilter;
     updatedAt?: DateTimeFilter;
-    authorId?: StringFilter;
-    author?: UserListRelationFilter;
+    author?: UserNullableRelationFilter | null;
   },
-  'id'
+  'id' | 'authorId'
 >;
 
 export type FileUploadOrderByWithAggregationInput = {
@@ -956,8 +925,8 @@ export type UserUncheckedCreateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatarId?: string | null;
   Post?: PostUncheckedCreateNestedManyWithoutAuthorInput;
+  avatar?: FileUploadUncheckedCreateNestedOneWithoutAuthorInput;
 };
 
 export type UserUpdateInput = {
@@ -982,8 +951,8 @@ export type UserUncheckedUpdateInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatarId?: string | null;
   Post?: PostUncheckedUpdateManyWithoutAuthorNestedInput;
+  avatar?: FileUploadUncheckedUpdateOneWithoutAuthorNestedInput;
 };
 
 export type UserCreateManyInput = {
@@ -995,7 +964,6 @@ export type UserCreateManyInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatarId?: string | null;
 };
 
 export type UserUpdateManyMutationInput = {
@@ -1018,7 +986,6 @@ export type UserUncheckedUpdateManyInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatarId?: string | null;
 };
 
 export type FileUploadCreateInput = {
@@ -1028,8 +995,7 @@ export type FileUploadCreateInput = {
   thumbnailPathUrl?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
-  authorId: string;
-  author?: UserCreateNestedManyWithoutAvatarInput;
+  author?: UserCreateNestedOneWithoutAvatarInput;
 };
 
 export type FileUploadUncheckedCreateInput = {
@@ -1040,7 +1006,6 @@ export type FileUploadUncheckedCreateInput = {
   createdAt?: Date;
   updatedAt?: Date;
   authorId: string;
-  author?: UserUncheckedCreateNestedManyWithoutAvatarInput;
 };
 
 export type FileUploadUpdateInput = {
@@ -1050,8 +1015,7 @@ export type FileUploadUpdateInput = {
   thumbnailPathUrl?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
-  authorId?: string;
-  author?: UserUpdateManyWithoutAvatarNestedInput;
+  author?: UserUpdateOneWithoutAvatarNestedInput;
 };
 
 export type FileUploadUncheckedUpdateInput = {
@@ -1062,7 +1026,6 @@ export type FileUploadUncheckedUpdateInput = {
   createdAt?: Date;
   updatedAt?: Date;
   authorId?: string;
-  author?: UserUncheckedUpdateManyWithoutAvatarNestedInput;
 };
 
 export type FileUploadCreateManyInput = {
@@ -1082,7 +1045,6 @@ export type FileUploadUpdateManyMutationInput = {
   thumbnailPathUrl?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
-  authorId?: string;
 };
 
 export type FileUploadUncheckedUpdateManyInput = {
@@ -1258,7 +1220,6 @@ export type UserCountOrderByAggregateInput = {
   roles?: SortOrder;
   googleId?: SortOrder;
   googleProfile?: SortOrder;
-  avatarId?: SortOrder;
 };
 
 export type UserMaxOrderByAggregateInput = {
@@ -1268,7 +1229,6 @@ export type UserMaxOrderByAggregateInput = {
   password?: SortOrder;
   email?: SortOrder;
   googleId?: SortOrder;
-  avatarId?: SortOrder;
 };
 
 export type UserMinOrderByAggregateInput = {
@@ -1278,7 +1238,6 @@ export type UserMinOrderByAggregateInput = {
   password?: SortOrder;
   email?: SortOrder;
   googleId?: SortOrder;
-  avatarId?: SortOrder;
 };
 
 export type StringWithAggregatesFilter = {
@@ -1350,14 +1309,9 @@ export type JsonNullableWithAggregatesFilter = {
   _max?: NestedJsonNullableFilter;
 };
 
-export type UserListRelationFilter = {
-  every?: UserWhereInput;
-  some?: UserWhereInput;
-  none?: UserWhereInput;
-};
-
-export type UserOrderByRelationAggregateInput = {
-  _count?: SortOrder;
+export type UserNullableRelationFilter = {
+  is?: UserWhereInput | null;
+  isNot?: UserWhereInput | null;
 };
 
 export type FileUploadCountOrderByAggregateInput = {
@@ -1460,6 +1414,12 @@ export type PostUncheckedCreateNestedManyWithoutAuthorInput = {
   connect?: PostWhereUniqueInput[];
 };
 
+export type FileUploadUncheckedCreateNestedOneWithoutAuthorInput = {
+  create?: FileUploadCreateWithoutAuthorInput;
+  connectOrCreate?: FileUploadCreateOrConnectWithoutAuthorInput;
+  connect?: FileUploadWhereUniqueInput;
+};
+
 export type StringFieldUpdateOperationsInput = {
   set?: string;
 };
@@ -1515,46 +1475,30 @@ export type PostUncheckedUpdateManyWithoutAuthorNestedInput = {
   deleteMany?: PostScalarWhereInput[];
 };
 
-export type UserCreateNestedManyWithoutAvatarInput = {
-  create?: UserCreateWithoutAvatarInput[];
-  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput[];
-  createMany?: UserCreateManyAvatarInputEnvelope;
-  connect?: UserWhereUniqueInput[];
+export type FileUploadUncheckedUpdateOneWithoutAuthorNestedInput = {
+  create?: FileUploadCreateWithoutAuthorInput;
+  connectOrCreate?: FileUploadCreateOrConnectWithoutAuthorInput;
+  upsert?: FileUploadUpsertWithoutAuthorInput;
+  disconnect?: FileUploadWhereInput;
+  delete?: FileUploadWhereInput;
+  connect?: FileUploadWhereUniqueInput;
+  update?: FileUploadUpdateToOneWithWhereWithoutAuthorInput;
 };
 
-export type UserUncheckedCreateNestedManyWithoutAvatarInput = {
-  create?: UserCreateWithoutAvatarInput[];
-  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput[];
-  createMany?: UserCreateManyAvatarInputEnvelope;
-  connect?: UserWhereUniqueInput[];
+export type UserCreateNestedOneWithoutAvatarInput = {
+  create?: UserCreateWithoutAvatarInput;
+  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput;
+  connect?: UserWhereUniqueInput;
 };
 
-export type UserUpdateManyWithoutAvatarNestedInput = {
-  create?: UserCreateWithoutAvatarInput[];
-  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput[];
-  upsert?: UserUpsertWithWhereUniqueWithoutAvatarInput[];
-  createMany?: UserCreateManyAvatarInputEnvelope;
-  set?: UserWhereUniqueInput[];
-  disconnect?: UserWhereUniqueInput[];
-  delete?: UserWhereUniqueInput[];
-  connect?: UserWhereUniqueInput[];
-  update?: UserUpdateWithWhereUniqueWithoutAvatarInput[];
-  updateMany?: UserUpdateManyWithWhereWithoutAvatarInput[];
-  deleteMany?: UserScalarWhereInput[];
-};
-
-export type UserUncheckedUpdateManyWithoutAvatarNestedInput = {
-  create?: UserCreateWithoutAvatarInput[];
-  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput[];
-  upsert?: UserUpsertWithWhereUniqueWithoutAvatarInput[];
-  createMany?: UserCreateManyAvatarInputEnvelope;
-  set?: UserWhereUniqueInput[];
-  disconnect?: UserWhereUniqueInput[];
-  delete?: UserWhereUniqueInput[];
-  connect?: UserWhereUniqueInput[];
-  update?: UserUpdateWithWhereUniqueWithoutAvatarInput[];
-  updateMany?: UserUpdateManyWithWhereWithoutAvatarInput[];
-  deleteMany?: UserScalarWhereInput[];
+export type UserUpdateOneWithoutAvatarNestedInput = {
+  create?: UserCreateWithoutAvatarInput;
+  connectOrCreate?: UserCreateOrConnectWithoutAvatarInput;
+  upsert?: UserUpsertWithoutAvatarInput;
+  disconnect?: UserWhereInput;
+  delete?: UserWhereInput;
+  connect?: UserWhereUniqueInput;
+  update?: UserUpdateToOneWithWhereWithoutAvatarInput;
 };
 
 export type UserCreateNestedOneWithoutPostInput = {
@@ -1748,7 +1692,6 @@ export type FileUploadCreateWithoutAuthorInput = {
   thumbnailPathUrl?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
-  authorId: string;
 };
 
 export type FileUploadUncheckedCreateWithoutAuthorInput = {
@@ -1758,7 +1701,6 @@ export type FileUploadUncheckedCreateWithoutAuthorInput = {
   thumbnailPathUrl?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
-  authorId: string;
 };
 
 export type FileUploadCreateOrConnectWithoutAuthorInput = {
@@ -1813,7 +1755,6 @@ export type FileUploadUpdateWithoutAuthorInput = {
   thumbnailPathUrl?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
-  authorId?: string;
 };
 
 export type FileUploadUncheckedUpdateWithoutAuthorInput = {
@@ -1823,7 +1764,6 @@ export type FileUploadUncheckedUpdateWithoutAuthorInput = {
   thumbnailPathUrl?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
-  authorId?: string;
 };
 
 export type UserCreateWithoutAvatarInput = {
@@ -1855,40 +1795,39 @@ export type UserCreateOrConnectWithoutAvatarInput = {
   create: UserCreateWithoutAvatarInput;
 };
 
-export type UserCreateManyAvatarInputEnvelope = {
-  data: UserCreateManyAvatarInput[];
-  skipDuplicates?: boolean;
-};
-
-export type UserUpsertWithWhereUniqueWithoutAvatarInput = {
-  where: UserWhereUniqueInput;
+export type UserUpsertWithoutAvatarInput = {
   update: UserUpdateWithoutAvatarInput;
   create: UserCreateWithoutAvatarInput;
+  where?: UserWhereInput;
 };
 
-export type UserUpdateWithWhereUniqueWithoutAvatarInput = {
-  where: UserWhereUniqueInput;
+export type UserUpdateToOneWithWhereWithoutAvatarInput = {
+  where?: UserWhereInput;
   data: UserUpdateWithoutAvatarInput;
 };
 
-export type UserUpdateManyWithWhereWithoutAvatarInput = {
-  where: UserScalarWhereInput;
-  data: UserUpdateManyMutationInput;
+export type UserUpdateWithoutAvatarInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email?: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+  Post?: PostUpdateManyWithoutAuthorNestedInput;
 };
 
-export type UserScalarWhereInput = {
-  AND?: UserScalarWhereInput[];
-  OR?: UserScalarWhereInput[];
-  NOT?: UserScalarWhereInput[];
-  id?: StringFilter;
-  createdAt?: DateTimeFilter;
-  username?: StringNullableFilter | null;
-  password?: StringNullableFilter | null;
-  email?: StringFilter;
-  roles?: StringNullableListFilter;
-  googleId?: StringNullableFilter | null;
-  googleProfile?: JsonNullableFilter;
-  avatarId?: StringNullableFilter | null;
+export type UserUncheckedUpdateWithoutAvatarInput = {
+  id?: string;
+  createdAt?: Date;
+  username?: string | null;
+  password?: string | null;
+  email?: string;
+  roles?: string[];
+  googleId?: string | null;
+  googleProfile?: any;
+  Post?: PostUncheckedUpdateManyWithoutAuthorNestedInput;
 };
 
 export type UserCreateWithoutPostInput = {
@@ -1912,7 +1851,7 @@ export type UserUncheckedCreateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatarId?: string | null;
+  avatar?: FileUploadUncheckedCreateNestedOneWithoutAuthorInput;
 };
 
 export type UserCreateOrConnectWithoutPostInput = {
@@ -1952,7 +1891,7 @@ export type UserUncheckedUpdateWithoutPostInput = {
   roles?: string[];
   googleId?: string | null;
   googleProfile?: any;
-  avatarId?: string | null;
+  avatar?: FileUploadUncheckedUpdateOneWithoutAuthorNestedInput;
 };
 
 export type PostCreateManyAuthorInput = {
@@ -1991,52 +1930,6 @@ export type PostUncheckedUpdateManyWithoutAuthorInput = {
   updatedAt?: Date;
 };
 
-export type UserCreateManyAvatarInput = {
-  id?: string;
-  createdAt?: Date;
-  username?: string | null;
-  password?: string | null;
-  email: string;
-  roles?: string[];
-  googleId?: string | null;
-  googleProfile?: any;
-};
-
-export type UserUpdateWithoutAvatarInput = {
-  id?: string;
-  createdAt?: Date;
-  username?: string | null;
-  password?: string | null;
-  email?: string;
-  roles?: string[];
-  googleId?: string | null;
-  googleProfile?: any;
-  Post?: PostUpdateManyWithoutAuthorNestedInput;
-};
-
-export type UserUncheckedUpdateWithoutAvatarInput = {
-  id?: string;
-  createdAt?: Date;
-  username?: string | null;
-  password?: string | null;
-  email?: string;
-  roles?: string[];
-  googleId?: string | null;
-  googleProfile?: any;
-  Post?: PostUncheckedUpdateManyWithoutAuthorNestedInput;
-};
-
-export type UserUncheckedUpdateManyWithoutAvatarInput = {
-  id?: string;
-  createdAt?: Date;
-  username?: string | null;
-  password?: string | null;
-  email?: string;
-  roles?: string[];
-  googleId?: string | null;
-  googleProfile?: any;
-};
-
 export enum TransactionIsolationLevel {
   ReadUncommitted = 'ReadUncommitted',
   ReadCommitted = 'ReadCommitted',
@@ -2052,7 +1945,6 @@ export enum UserScalarFieldEnum {
   roles = 'roles',
   googleId = 'googleId',
   googleProfile = 'googleProfile',
-  avatarId = 'avatarId',
 }
 export enum FileUploadScalarFieldEnum {
   id = 'id',
