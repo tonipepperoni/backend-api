@@ -13,11 +13,9 @@ export type AppAbility = PureAbility<[Action, AppSubjects], PrismaQuery>;
 export class AppCaslFactory extends CaslFactory {
   async createAbility(user: RequestUser & { roles: Role[] }) {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(createPrismaAbility);
-    console.log(user.roles);
     if (user.roles.includes('Super')) {
       can('manage', 'all');
     } else if (user.roles.includes('User')){
-      console.log('includes USER role');
       can(['create',  'read'], 'all');
       can('update', 'Post', {authorId:user.id});
       can('delete', 'Post', {authorId:user.id});

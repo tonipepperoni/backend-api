@@ -65,4 +65,8 @@ export const environment: EnvironmentBase = {
       scope: ['email'],
     },
   },
+  redis:{
+    host:process.env.REDIS_HOST as string,
+    port:process.env.REDIS_PORT as string
+  }
 };

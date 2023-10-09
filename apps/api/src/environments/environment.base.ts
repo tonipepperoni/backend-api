@@ -27,4 +27,8 @@ export abstract class EnvironmentBase {
     loginConfirmedURL: string;
     google?: GoogleStrategyOptions;
   };
+  readonly redis?: {
+    host:string;
+    port:string | number;
+  }
 }

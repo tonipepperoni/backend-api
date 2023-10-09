@@ -62,5 +62,5 @@ export const environment: EnvironmentBase = {
       callbackURL: 'https://api.site.com/auth/google/redirect',
       scope: ['email'],
     },
-  },
+  }
 };

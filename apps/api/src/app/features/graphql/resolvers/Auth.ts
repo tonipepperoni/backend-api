@@ -23,7 +23,8 @@ import {
   AuthPasswordResetRequestInput,
   AuthRegisterInput,
 } from '../models';
-import {AccountExistsInput} from "../models/account-exists-input";
+import {InjectQueue} from "@nestjs/bull";
+import {Queue} from "bull";
 
 const logger = new Logger('AuthResolver');
 
@@ -109,7 +110,9 @@ export class AuthResolver {
     private readonly config: ConfigService,
     private readonly jwtService: JwtService,
     private readonly mail: MailService,
-    private readonly prisma: PrismaService
+    private readonly prisma: PrismaService,
+    @InjectQueue('register-queue') private registerQueue: Queue,
+    @InjectQueue('reset-password-queue') private resetPasswordQueue: Queue
   ) {}
 
   @Query()
@@ -140,45 +143,6 @@ export class AuthResolver {
 
     return this.auth.getAuthSession(user, args.rememberMe);
   }
-
-  // @Query()
-  // async userExists(@Args('data') args: AccountExistsInput) {
-  //   if (args.username) {
-  //     const user = await this.prisma.user.findFirst({
-  //       where: {
-  //         username: {
-  //           mode: 'insensitive',
-  //           equals: args.username,
-  //         },
-  //       },
-  //       select: {
-  //         id: true,
-  //         email: true,
-  //         username: true,
-  //       },
-  //     });
-  //     if (!user) throw new HttpException(ApiError.UserExists.USER_USERNAME_NOT_FOUND, 400);
-  //     return user;
-  //   } else if (args.email) {
-  //     const user = await this.prisma.user.findFirst({
-  //       where: {
-  //         email: {
-  //           mode: 'insensitive',
-  //           equals: args.email,
-  //         },
-  //       },
-  //       select: {
-  //         id: true,
-  //         email: true,
-  //         username: true,
-  //       },
-  //     });
-  //     if (!user) throw new HttpException(ApiError.UserExists.USER_USERNAME_NOT_FOUND, 400);
-  //     return user;
-  //   } else {
-  //     throw new HttpException(ApiError.AuthLogin.USER_NOT_FOUND, 400);
-  //   }
-  // }
 
   @Query()
   @UseGuards(RolesGuard())
@@ -250,7 +214,9 @@ export class AuthResolver {
     if (possibleUsers.length === 0)
       throw new HttpException(ApiError.AuthPasswordResetRequest.USER_NOT_FOUND, 400);
 
-    possibleUsers.forEach(user => this.mail.sendPasswordReset(user));
+    possibleUsers.forEach(user => {
+      this.resetPasswordQueue.add(user);
+    });
   }
 
   @Mutation()
@@ -314,21 +280,7 @@ export class AuthResolver {
     });
 
     // Intended to be tailored to the site
-    if (this.config.production) {
-      this.mail.sendGeneral({
-        to: user.email,
-        subject: 'Sign Up Confirmed',
-        context: {
-          siteUrl: this.config.siteUrl,
-          hiddenPreheaderText: `Sign up confirmed for ${user.username}`,
-          header: 'Welcome',
-          subHeading: 'Sign Up Confirmed',
-          body: `Thank you for signing up ${user.username}!`,
-          footerHeader: '',
-          footerBody: '',
-        },
-      });
-    }
+    await this.registerQueue.add(user);
 
     logger.log(`Registered new user: ${user.username}`);
 
