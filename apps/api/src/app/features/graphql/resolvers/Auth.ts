@@ -303,6 +303,7 @@ export class AuthResolver {
         username: args.username,
         email: args.email,
         password: hashedPassword,
+        roles: ["User"]
       },
       select: {
         id: true,
