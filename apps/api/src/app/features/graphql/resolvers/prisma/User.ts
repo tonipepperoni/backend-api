@@ -39,7 +39,7 @@ interface UserEmailInput {
 }
 
 @Resolver('User')
-@UseGuards(RolesGuard('Prisma'))
+@UseGuards(RolesGuard('Prisma', 'User'))
 export class UserResolver {
   constructor(
     private readonly auth: AuthService,

@@ -23,6 +23,7 @@ import {
   AuthPasswordResetRequestInput,
   AuthRegisterInput,
 } from '../models';
+import {AccountExistsInput} from "../models/account-exists-input";
 
 const logger = new Logger('AuthResolver');
 
@@ -139,6 +140,45 @@ export class AuthResolver {
 
     return this.auth.getAuthSession(user, args.rememberMe);
   }
+
+  // @Query()
+  // async userExists(@Args('data') args: AccountExistsInput) {
+  //   if (args.username) {
+  //     const user = await this.prisma.user.findFirst({
+  //       where: {
+  //         username: {
+  //           mode: 'insensitive',
+  //           equals: args.username,
+  //         },
+  //       },
+  //       select: {
+  //         id: true,
+  //         email: true,
+  //         username: true,
+  //       },
+  //     });
+  //     if (!user) throw new HttpException(ApiError.UserExists.USER_USERNAME_NOT_FOUND, 400);
+  //     return user;
+  //   } else if (args.email) {
+  //     const user = await this.prisma.user.findFirst({
+  //       where: {
+  //         email: {
+  //           mode: 'insensitive',
+  //           equals: args.email,
+  //         },
+  //       },
+  //       select: {
+  //         id: true,
+  //         email: true,
+  //         username: true,
+  //       },
+  //     });
+  //     if (!user) throw new HttpException(ApiError.UserExists.USER_USERNAME_NOT_FOUND, 400);
+  //     return user;
+  //   } else {
+  //     throw new HttpException(ApiError.AuthLogin.USER_NOT_FOUND, 400);
+  //   }
+  // }
 
   @Query()
   @UseGuards(RolesGuard())

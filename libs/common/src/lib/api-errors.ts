@@ -1,7 +1,10 @@
 export enum Nest {
   THROTTLE = 'ThrottlerException: Too Many Requests',
 }
-
+export enum UserExists {
+  USER_EMAIL_NOT_FOUND = 'USER_EMAIL_WAS_NOT_FOUND',
+  USER_USERNAME_NOT_FOUND = "USER_USERNAME_WAS_NOT_FOUND"
+}
 export enum AuthLogin {
   USER_NOT_FOUND = 'USER_NOT_FOUND',
   INCORRECT_PASSWORD = 'INCORRECT_PASSWORD',
