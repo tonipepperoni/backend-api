@@ -21,6 +21,7 @@ import {
   AuthPasswordChangeInput,
   AuthPasswordResetConfirmationInput,
   AuthPasswordResetRequestInput,
+  AuthPasswordResetSearchRequest,
   AuthRegisterInput,
 } from '../models';
 import {InjectQueue} from "@nestjs/bull";
@@ -32,6 +33,7 @@ export const typeDefs = gql`
   extend type Query {
     authLogin(data: AuthLoginInput!): AuthSession!
     authExchangeToken(data: AuthExchangeTokenInput): AuthSession!
+    authPasswordResetSearchRequest(data:AuthPasswordResetSearchRequest!) : SearchInfo!
     authPasswordResetRequest(data: AuthPasswordResetRequestInput!): Boolean
     accountInfo: AccountInfo!
   }
@@ -70,6 +72,12 @@ export const typeDefs = gql`
     createdAt: DateTime!
   }
 
+  type SearchInfo {
+    id:String!
+    username: String!
+    email: String!
+  }
+
   input AuthLoginInput {
     username: String!
     password: String!
@@ -91,7 +99,11 @@ export const typeDefs = gql`
   }
 
   input AuthPasswordResetRequestInput {
-    emailOrUsername: String!
+    id: String!
+  }
+
+  input AuthPasswordResetSearchRequest {
+    emailOrUsername:String!
   }
 
   input AuthRegisterInput {
@@ -189,8 +201,8 @@ export class AuthResolver {
   }
 
   @Query()
-  async authPasswordResetRequest(@Args('data') args: AuthPasswordResetRequestInput) {
-    const possibleUsers = await this.prisma.user.findMany({
+  async authPasswordResetSearchRequest(@Args('data') args: AuthPasswordResetSearchRequest) {
+    const possibleUser = await this.prisma.user.findFirst({
       where: {
         OR: [
           {
@@ -208,15 +220,31 @@ export class AuthResolver {
         ],
         AND: [{ username: { not: null } }],
       },
+      select: { id: true, email: true, username: true },
+    });
+
+    if (!possibleUser) {
+      throw new HttpException(ApiError.AuthPasswordResetRequest.USER_NOT_FOUND, 400);
+    }
+
+    return possibleUser;
+  }
+
+  @Query()
+  async authPasswordResetRequest(@Args('data') args: AuthPasswordResetRequestInput) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id :  args.id
+      },
       select: { id: true, email: true },
     });
 
-    if (possibleUsers.length === 0)
+    if (!user) {
       throw new HttpException(ApiError.AuthPasswordResetRequest.USER_NOT_FOUND, 400);
+    }
 
-    possibleUsers.forEach(user => {
-      this.resetPasswordQueue.add(user);
-    });
+    await this.resetPasswordQueue.add(user);
+    return true;
   }
 
   @Mutation()

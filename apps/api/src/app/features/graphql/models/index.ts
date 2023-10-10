@@ -8,3 +8,4 @@ export * from './auth-password-reset-request-input';
 export * from './auth-register-input';
 export * from './auth-session';
 export * from './upload';
+export * from './auth-password-reset-search-request';

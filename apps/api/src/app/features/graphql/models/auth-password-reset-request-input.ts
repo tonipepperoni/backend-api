@@ -1,9 +1,7 @@
-import { ApiConstants } from '@zen/common';
-import { MaxLength } from 'class-validator';
-
-const LONGEST = ApiConstants.USERNAME_MAX_LENGTH > 254 ? ApiConstants.USERNAME_MAX_LENGTH : 254;
+import {IsNotEmpty, IsNumber} from 'class-validator';
 
 export class AuthPasswordResetRequestInput {
-  @MaxLength(LONGEST)
-  readonly emailOrUsername: string;
+  @IsNotEmpty()
+  @IsNumber()
+  readonly id: string;
 }
