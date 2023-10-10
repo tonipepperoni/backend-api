@@ -4,22 +4,22 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  //output        = "../src/app/features/prisma/generated"
-  //binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  // output        = "../src/app/features/prisma/generated"
+  // binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
   previewFeatures = ["fullTextSearch"]
 }
 
 generator nestgraphql {
   provider = "node node_modules/prisma-nestjs-graphql"
   // for yarn monorepos
-  //provider = "prisma-nestjs-graphql"
-  output = "../src/app/features/prisma/generated"
+  // provider = "prisma-nestjs-graphql"
+  output   = "../src/app/features/prisma/generated"
 
   noAtomicOperations                    = false
   combineScalarFilters                  = false
   reExport                              = None
-  emitSingle                            = true //false
+  emitSingle                            = true // false
   emitCompiled                          = false
   purgeOutput                           = false
   requireSingleFieldsInWhereUniqueInput = false
@@ -58,7 +58,49 @@ model User {
   Post          Post[]
   avatar        FileUpload?
 
+  emailVerifiedAt DateTime?
+
+  notifications Notification[]
+
   @@map(name: "Users")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+
+  // Polymorphic relation fields
+  typeId Int
+  type   String
+
+  // Notification details fields
+  content String
+
+  // Relation to associated models
+  message       Message?       @relation(fields: [typeId], references: [id], map: "message_ref_id") // notification type message?
+  friendRequest FriendRequest? @relation(fields: [typeId], references: [id], map: "friend_ref_id") // notification type FriendRequest?
+
+  // users notifications
+  user User? @relation(fields: [userId], references: [id], map: "user_ref_id")
+
+  @@index([type, typeId], name: "idx_notification_type")
+}
+
+// types of notifications message, friend requests, system, alert and etc.
+model Message {
+  id            Int            @id @unique @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  content       String
+  notifications Notification[]
+}
+
+model FriendRequest {
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  status        String
+  notifications Notification[]
 }
 
 model FileUpload {
@@ -88,8 +130,8 @@ model Post {
 }
 
 model Book {
-  id String @id @default(cuid())
-  title String
+  id      String @id @default(cuid())
+  title   String
   content Json?
 
   @@map(name: "Books")

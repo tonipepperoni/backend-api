@@ -5,15 +5,14 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Throttle } from '@nestjs/throttler';
 import { ApiError } from '@zen/common';
 import { CurrentUser, JwtPayload, RequestUser, RolesGuard } from '@zen/nest-auth';
-import gql from 'graphql-tag';
 import { bcrypt, bcryptVerify } from 'hash-wasm';
 
-import { AuthService } from '../../auth';
-import { ConfigService } from '../../config';
-import { JwtService } from '../../jwt';
-import { MailService } from '../../mail';
-import { PrismaService } from '../../prisma';
-import { GqlThrottlerGuard } from '../gql-throttler.guard';
+import { AuthService } from '../auth';
+import { ConfigService } from '../config';
+import { JwtService } from '../jwt';
+import { MailService } from '../mail';
+import { PrismaService } from '../prisma';
+import { GqlThrottlerGuard } from '../graphql/gql-throttler.guard';
 import {
   AccountInfo,
   AuthExchangeTokenInput,
@@ -21,13 +20,14 @@ import {
   AuthPasswordChangeInput,
   AuthPasswordResetConfirmationInput,
   AuthPasswordResetRequestInput,
-  AuthPasswordResetSearchRequest,
+  AuthPasswordResetSearchRequestInput,
   AuthRegisterInput,
 } from '../graphql/models';
 import {User} from "../prisma/generated";
 import { AuthSession } from "./models/auth-session";
 import {InjectQueue} from "@nestjs/bull";
 import {Queue} from "bull";
+import {UserSearchResponse} from "./models/user-search-response";
 
 const logger = new Logger('AuthResolver');
 
@@ -118,8 +118,8 @@ export class AuthResolver {
     }
   }
 
-  @Query()
-  async authPasswordResetSearchRequest(@Args('data') args: AuthPasswordResetSearchRequest) {
+  @Query(() => UserSearchResponse)
+  async authPasswordResetSearchRequest(@Args('data') args: AuthPasswordResetSearchRequestInput) {
     const possibleUser = await this.prisma.user.findFirst({
       where: {
         OR: [
@@ -148,7 +148,7 @@ export class AuthResolver {
     return possibleUser;
   }
 
-  @Query()
+  @Query(() => Boolean)
   async authPasswordResetRequest(@Args('data') args: AuthPasswordResetRequestInput) {
     const user = await this.prisma.user.findUnique({
       where: {

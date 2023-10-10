@@ -1,6 +1,10 @@
 import {Global, Module} from "@nestjs/common";
 import {BullModule} from "@nestjs/bull";
 import {ConfigModule, ConfigService} from "../config";
+import {RegisterProcessor} from "./register.processor";
+import {ResetPasswordProcessor} from "./reset.password.processor";
+import {MailService} from "../mail";
+import {JwtService} from "@nestjs/jwt";
 
 @Global()
 @Module({
@@ -16,6 +20,7 @@ import {ConfigModule, ConfigService} from "../config";
       inject: [ConfigService]
     }),
   ],
-  exports:[QueueModule]
+  exports:[QueueModule],
+  providers:[JwtService, MailService, RegisterProcessor, ResetPasswordProcessor],
 })
 export class QueueModule {}

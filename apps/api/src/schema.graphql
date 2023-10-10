@@ -31,6 +31,10 @@ input AuthPasswordResetConfirmationInput {
 }
 
 input AuthPasswordResetRequestInput {
+  id: String!
+}
+
+input AuthPasswordResetSearchRequestInput {
   emailOrUsername: String!
 }
 
@@ -133,10 +137,88 @@ type FileUploadMinAggregate {
   updatedAt: DateTime
 }
 
+type FriendRequest {
+  _count: FriendRequestCount!
+  createdAt: DateTime!
+  id: ID!
+  notifications: [Notification!]
+  status: String!
+}
+
+type FriendRequestAvgAggregate {
+  id: Float
+}
+
+type FriendRequestCount {
+  notifications: Int!
+}
+
+type FriendRequestCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  id: Int!
+  status: Int!
+}
+
+type FriendRequestMaxAggregate {
+  createdAt: DateTime
+  id: Int
+  status: String
+}
+
+type FriendRequestMinAggregate {
+  createdAt: DateTime
+  id: Int
+  status: String
+}
+
+type FriendRequestSumAggregate {
+  id: Int
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON
+
+type Message {
+  _count: MessageCount!
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  notifications: [Notification!]
+}
+
+type MessageAvgAggregate {
+  id: Float
+}
+
+type MessageCount {
+  notifications: Int!
+}
+
+type MessageCountAggregate {
+  _all: Int!
+  content: Int!
+  createdAt: Int!
+  id: Int!
+}
+
+type MessageMaxAggregate {
+  content: String
+  createdAt: DateTime
+  id: Int
+}
+
+type MessageMinAggregate {
+  content: String
+  createdAt: DateTime
+  id: Int
+}
+
+type MessageSumAggregate {
+  id: Int
+}
 
 type Mutation {
   authPasswordChange(data: AuthPasswordChangeInput!): String!
@@ -145,6 +227,60 @@ type Mutation {
   create(data: BookCreateInput!): Book!
   delete(id: String!): Book!
   update(data: BookUpdateInput!, id: String!): Book!
+}
+
+type Notification {
+  content: String!
+  createdAt: DateTime!
+  friendRequest: FriendRequest
+  id: ID!
+  message: Message
+  type: String!
+  typeId: Int!
+  updatedAt: DateTime!
+  user: User
+  userId: String!
+}
+
+type NotificationAvgAggregate {
+  id: Float
+  typeId: Float
+}
+
+type NotificationCountAggregate {
+  _all: Int!
+  content: Int!
+  createdAt: Int!
+  id: Int!
+  type: Int!
+  typeId: Int!
+  updatedAt: Int!
+  userId: Int!
+}
+
+type NotificationMaxAggregate {
+  content: String
+  createdAt: DateTime
+  id: Int
+  type: String
+  typeId: Int
+  updatedAt: DateTime
+  userId: String
+}
+
+type NotificationMinAggregate {
+  content: String
+  createdAt: DateTime
+  id: Int
+  type: String
+  typeId: Int
+  updatedAt: DateTime
+  userId: String
+}
+
+type NotificationSumAggregate {
+  id: Int
+  typeId: Int
 }
 
 type Post {
@@ -191,7 +327,8 @@ type Query {
   accountInfo: AccountInfo!
   authExchangeToken(data: AuthExchangeTokenInput!): AuthSession!
   authLogin(data: AuthLoginInput!): AuthSession!
-  authPasswordResetRequest(data: AuthPasswordResetRequestInput!): String!
+  authPasswordResetRequest(data: AuthPasswordResetRequestInput!): Boolean!
+  authPasswordResetSearchRequest(data: AuthPasswordResetSearchRequestInput!): UserSearchResponse!
   find(bookId: String!): Book!
   getAll: [Book!]!
 }
@@ -206,9 +343,11 @@ type User {
   avatar: FileUpload
   createdAt: DateTime!
   email: String!
+  emailVerifiedAt: DateTime
   googleId: String
   googleProfile: JSON
   id: ID!
+  notifications: [Notification!]
   password: String
   roles: [String!]
   username: String
@@ -216,12 +355,14 @@ type User {
 
 type UserCount {
   Post: Int!
+  notifications: Int!
 }
 
 type UserCountAggregate {
   _all: Int!
   createdAt: Int!
   email: Int!
+  emailVerifiedAt: Int!
   googleId: Int!
   googleProfile: Int!
   id: Int!
@@ -233,6 +374,7 @@ type UserCountAggregate {
 type UserMaxAggregate {
   createdAt: DateTime
   email: String
+  emailVerifiedAt: DateTime
   googleId: String
   id: String
   password: String
@@ -242,8 +384,15 @@ type UserMaxAggregate {
 type UserMinAggregate {
   createdAt: DateTime
   email: String
+  emailVerifiedAt: DateTime
   googleId: String
   id: String
   password: String
+  username: String
+}
+
+type UserSearchResponse {
+  email: String!
+  id: String!
   username: String
 }

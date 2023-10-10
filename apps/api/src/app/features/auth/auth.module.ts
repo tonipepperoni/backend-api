@@ -12,12 +12,25 @@ import { GoogleOAuthStrategy } from './strategies/google-oauth.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import {AuthResolver} from "./auth.resolver";
 import {MailModule} from "../mail";
+import {QueueModule} from "../queue/queue.module";
+import {BullModule} from "@nestjs/bull";
 
 const oauthProviders: Provider[] = [];
 if (environment.oauth?.google?.clientID) oauthProviders.push(GoogleOAuthStrategy);
 
 @Module({
-  imports: [JwtModule, PrismaModule, MailModule, NestAuthModule.register(AppCaslFactory)],
+  imports: [
+    BullModule.registerQueue({
+      name: 'register-queue'
+    }),
+    BullModule.registerQueue({
+      name: 'reset-password-queue'
+    }),
+    JwtModule,
+    PrismaModule,
+    QueueModule,
+    MailModule,
+    NestAuthModule.register(AppCaslFactory)],
   providers: [JwtStrategy, AuthService, authFieldsProvider, ...oauthProviders, AuthResolver],
   exports: [JwtModule, AuthService, NestAuthModule, authFieldsProvider, AuthResolver],
   controllers: [AuthController],

@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 
 import { ConfigService } from '../config';
 import { JwtService } from '../jwt';
-import { User } from '../prisma';
+import { User } from '../prisma/generated';
 import { GeneralContext, PasswordResetContext } from './contexts';
 
 const logger = new Logger('MailService');
