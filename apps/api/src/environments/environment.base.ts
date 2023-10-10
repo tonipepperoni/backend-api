@@ -16,6 +16,13 @@ export abstract class EnvironmentBase {
     readonly introspection?: boolean;
     readonly csrfPrevention?: boolean;
     readonly uploads?: UploadOptions;
+    readonly sortSchema?: boolean;
+    readonly debug?: boolean;
+    readonly playground?: boolean;
+    readonly allowBatchedHttpRequests?: boolean;
+    readonly cache?: string | null;
+    readonly autoSchemaFile: string;
+    readonly installSubscriptionHandlers?: boolean;
   };
   readonly publicRegistration: boolean;
   readonly jwtOptions: JwtModuleOptions;

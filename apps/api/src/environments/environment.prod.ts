@@ -11,6 +11,7 @@ export const environment: EnvironmentBase = {
   expressPort: process.env.PORT as string,
   publicRegistration: true,
   graphql: {
+    autoSchemaFile: "./apps/api/src/schema.graphql",
     subscriptions: true,
     sandbox: false,
     introspection: false,

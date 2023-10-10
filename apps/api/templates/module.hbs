@@ -1,0 +1,8 @@
+import { {{ pascalCase modelName }}Resolver } from './{{ kebabCase modelName }}-resolver';
+import { Module } from '@nestjs/common';
+import { PrismaService } from '../../services/prisma.service';
+
+@Module({
+    providers: [{{ pascalCase modelName }}Resolver, PrismaService],
+})
+export class {{ pascalCase modelName }}Module {}

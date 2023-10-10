@@ -1,0 +1,249 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AccountInfo {
+  avatar: FileUpload
+  createdAt: DateTime!
+  email: String!
+  id: String!
+  username: String
+}
+
+input AuthExchangeTokenInput {
+  rememberMe: Boolean!
+}
+
+input AuthLoginInput {
+  password: String!
+  rememberMe: Boolean!
+  username: String!
+}
+
+input AuthPasswordChangeInput {
+  newPassword: String!
+  oldPassword: String!
+}
+
+input AuthPasswordResetConfirmationInput {
+  newPassword: String!
+  token: String!
+}
+
+input AuthPasswordResetRequestInput {
+  emailOrUsername: String!
+}
+
+input AuthRegisterInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+type AuthSession {
+  email: String!
+  expiresIn: Float!
+  rememberMe: Boolean!
+  roles: [String!]!
+  rules: [String!]!
+  token: String!
+  userId: String!
+  username: String!
+}
+
+type Book {
+  content: JSON
+  id: ID!
+  title: String!
+}
+
+type BookCountAggregate {
+  _all: Int!
+  content: Int!
+  id: Int!
+  title: Int!
+}
+
+input BookCreateInput {
+  content: JSON
+  id: String
+  title: String!
+}
+
+type BookMaxAggregate {
+  id: String
+  title: String
+}
+
+type BookMinAggregate {
+  id: String
+  title: String
+}
+
+input BookUpdateInput {
+  content: JSON
+  id: StringFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type FileUpload {
+  author: User
+  authorId: String!
+  createdAt: DateTime!
+  filePathUrl: String!
+  id: ID!
+  thumbnailPathUrl: String
+  type: String!
+  updatedAt: DateTime!
+}
+
+type FileUploadCountAggregate {
+  _all: Int!
+  authorId: Int!
+  createdAt: Int!
+  filePathUrl: Int!
+  id: Int!
+  thumbnailPathUrl: Int!
+  type: Int!
+  updatedAt: Int!
+}
+
+type FileUploadMaxAggregate {
+  authorId: String
+  createdAt: DateTime
+  filePathUrl: String
+  id: String
+  thumbnailPathUrl: String
+  type: String
+  updatedAt: DateTime
+}
+
+type FileUploadMinAggregate {
+  authorId: String
+  createdAt: DateTime
+  filePathUrl: String
+  id: String
+  thumbnailPathUrl: String
+  type: String
+  updatedAt: DateTime
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Mutation {
+  authPasswordChange(data: AuthPasswordChangeInput!): String!
+  authPasswordResetConfirmation(data: AuthPasswordResetConfirmationInput!): AuthSession!
+  authRegister(data: AuthRegisterInput!): AuthSession!
+  create(data: BookCreateInput!): Book!
+  delete(id: String!): Book!
+  update(data: BookUpdateInput!, id: String!): Book!
+}
+
+type Post {
+  author: User!
+  authorId: String!
+  content: JSON
+  createdAt: DateTime!
+  id: ID!
+  published: Boolean!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type PostCountAggregate {
+  _all: Int!
+  authorId: Int!
+  content: Int!
+  createdAt: Int!
+  id: Int!
+  published: Int!
+  title: Int!
+  updatedAt: Int!
+}
+
+type PostMaxAggregate {
+  authorId: String
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String
+  updatedAt: DateTime
+}
+
+type PostMinAggregate {
+  authorId: String
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String
+  updatedAt: DateTime
+}
+
+type Query {
+  accountInfo: AccountInfo!
+  authExchangeToken(data: AuthExchangeTokenInput!): AuthSession!
+  authLogin(data: AuthLoginInput!): AuthSession!
+  authPasswordResetRequest(data: AuthPasswordResetRequestInput!): String!
+  find(bookId: String!): Book!
+  getAll: [Book!]!
+}
+
+input StringFieldUpdateOperationsInput {
+  set: String
+}
+
+type User {
+  Post: [Post!]
+  _count: UserCount!
+  avatar: FileUpload
+  createdAt: DateTime!
+  email: String!
+  googleId: String
+  googleProfile: JSON
+  id: ID!
+  password: String
+  roles: [String!]
+  username: String
+}
+
+type UserCount {
+  Post: Int!
+}
+
+type UserCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  email: Int!
+  googleId: Int!
+  googleProfile: Int!
+  id: Int!
+  password: Int!
+  roles: Int!
+  username: Int!
+}
+
+type UserMaxAggregate {
+  createdAt: DateTime
+  email: String
+  googleId: String
+  id: String
+  password: String
+  username: String
+}
+
+type UserMinAggregate {
+  createdAt: DateTime
+  email: String
+  googleId: String
+  id: String
+  password: String
+  username: String
+}
