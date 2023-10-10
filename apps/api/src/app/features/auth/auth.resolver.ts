@@ -8,12 +8,12 @@ import { CurrentUser, JwtPayload, RequestUser, RolesGuard } from '@zen/nest-auth
 import gql from 'graphql-tag';
 import { bcrypt, bcryptVerify } from 'hash-wasm';
 
-import { AuthService } from '../../auth';
-import { ConfigService } from '../../config';
-import { JwtService } from '../../jwt';
-import { MailService } from '../../mail';
-import { PrismaService } from '../../prisma';
-import { GqlThrottlerGuard } from '../gql-throttler.guard';
+import { AuthService } from './index';
+import { ConfigService } from '../config';
+import { JwtService } from '../jwt';
+import { MailService } from '../mail';
+import { PrismaService } from '../prisma';
+import { GqlThrottlerGuard } from '../graphql/gql-throttler.guard';
 import {
   AccountInfo,
   AuthExchangeTokenInput,
@@ -22,7 +22,7 @@ import {
   AuthPasswordResetConfirmationInput,
   AuthPasswordResetRequestInput,
   AuthRegisterInput,
-} from '../models';
+} from '../graphql/models';
 
 const logger = new Logger('AuthResolver');
 

@@ -17,19 +17,6 @@ import type {
   UpsertOnePostArgs,
 } from '../../resolversTypes';
 
-export const typeDefs = null;
-// export const typeDefs = gql`
-//   extend type Query {
-//     samplePostQuery: Post
-//   }
-//   extend type Mutation {
-//     samplePostMutation(args: Int!): Boolean
-//   }
-//   extend type Post {
-//     samplePostField: String
-//   }
-// `;
-
 @Resolver('Post')
 @UseGuards(RolesGuard('Prisma'))
 export class PostResolver {

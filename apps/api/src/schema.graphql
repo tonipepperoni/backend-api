@@ -1,0 +1,193 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type BookCountAggregate {
+  id: Int!
+  title: Int!
+  content: Int!
+  _all: Int!
+}
+
+type BookMaxAggregate {
+  id: String
+  title: String
+}
+
+type BookMinAggregate {
+  id: String
+  title: String
+}
+
+type Book {
+  id: ID!
+  title: String!
+  content: JSON
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type FileUploadCountAggregate {
+  id: Int!
+  type: Int!
+  filePathUrl: Int!
+  thumbnailPathUrl: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  authorId: Int!
+  _all: Int!
+}
+
+type FileUploadMaxAggregate {
+  id: String
+  type: String
+  filePathUrl: String
+  thumbnailPathUrl: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  authorId: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type FileUploadMinAggregate {
+  id: String
+  type: String
+  filePathUrl: String
+  thumbnailPathUrl: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  authorId: String
+}
+
+type FileUpload {
+  id: ID!
+  type: String!
+  filePathUrl: String!
+  thumbnailPathUrl: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  authorId: String!
+  author: User
+}
+
+type PostCountAggregate {
+  id: Int!
+  title: Int!
+  content: Int!
+  published: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  authorId: Int!
+  _all: Int!
+}
+
+type PostMaxAggregate {
+  id: String
+  title: String
+  published: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  authorId: String
+}
+
+type PostMinAggregate {
+  id: String
+  title: String
+  published: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  authorId: String
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: JSON
+  published: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  authorId: String!
+  author: User!
+}
+
+type UserCountAggregate {
+  id: Int!
+  createdAt: Int!
+  username: Int!
+  password: Int!
+  email: Int!
+  roles: Int!
+  googleId: Int!
+  googleProfile: Int!
+  _all: Int!
+}
+
+type UserCount {
+  Post: Int!
+}
+
+type UserMaxAggregate {
+  id: String
+  createdAt: DateTime
+  username: String
+  password: String
+  email: String
+  googleId: String
+}
+
+type UserMinAggregate {
+  id: String
+  createdAt: DateTime
+  username: String
+  password: String
+  email: String
+  googleId: String
+}
+
+type User {
+  id: ID!
+  createdAt: DateTime!
+  username: String
+  password: String
+  email: String!
+  roles: [String!]
+  googleId: String
+  googleProfile: JSON
+  Post: [Post!]
+  avatar: FileUpload
+  _count: UserCount!
+}
+
+type Query {
+  find(bookId: String!): Book!
+  getAll: [Book!]!
+}
+
+type Mutation {
+  create(data: BookCreateInput!): Book!
+  update(data: BookUpdateInput!, id: String!): Book!
+  delete(id: String!): Book!
+}
+
+input BookCreateInput {
+  id: String
+  title: String!
+  content: JSON
+}
+
+input BookUpdateInput {
+  id: StringFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  content: JSON
+}
+
+input StringFieldUpdateOperationsInput {
+  set: String
+}

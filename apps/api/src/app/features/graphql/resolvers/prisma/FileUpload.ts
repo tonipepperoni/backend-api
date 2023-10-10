@@ -17,19 +17,6 @@ import type {
   UpsertOneFileUploadArgs,
 } from '../../resolversTypes';
 
-export const typeDefs = null;
-// export const typeDefs = gql`
-//   extend type Query {
-//     sampleFileUploadQuery: FileUpload
-//   }
-//   extend type Mutation {
-//     sampleFileUploadMutation(args: Int!): Boolean
-//   }
-//   extend type FileUpload {
-//     sampleFileUploadField: String
-//   }
-// `;
-
 @Resolver('FileUpload')
 @UseGuards(RolesGuard('Prisma'))
 export class FileUploadResolver {

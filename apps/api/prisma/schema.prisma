@@ -86,3 +86,11 @@ model Post {
 
   @@map(name: "Posts")
 }
+
+model Book {
+  id String @id @default(cuid())
+  title String
+  content Json?
+
+  @@map(name: "Books")
+}
