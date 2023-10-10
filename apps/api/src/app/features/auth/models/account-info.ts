@@ -1,9 +1,20 @@
-import { FileUpload } from "../../prisma";
+import { FileUpload } from "../../prisma/generated";
+import {Field, ObjectType} from "@nestjs/graphql";
 
-export interface AccountInfo {
-  id: string
-  email: string
-  username: string | null
-  createdAt: Date
-  avatar?: FileUpload | null,
+@ObjectType("AccountInfo")
+export class AccountInfo {
+  @Field()
+  id: string;
+
+  @Field()
+  email: string;
+
+  @Field(() => String, {nullable: true})
+  username: string | null;
+
+  @Field()
+  createdAt: Date;
+
+  @Field(() => FileUpload, {nullable: true})
+  avatar?: FileUpload | null;
 }

@@ -68,7 +68,7 @@ export class AuthResolver {
     return this.auth.getAuthSession(user, args.rememberMe);
   }
 
-  @Query(() => User)
+  @Query(() => AccountInfo)
   @UseGuards(RolesGuard())
   async accountInfo(@CurrentUser() reqUser: RequestUser) {
     console.log('req')
@@ -94,7 +94,7 @@ export class AuthResolver {
     } satisfies AccountInfo;
   }
 
-  @Query(() => User)
+  @Query(() => AuthSession)
   @UseGuards(RolesGuard())
   async authExchangeToken(
     @CurrentUser() reqUser: RequestUser,
@@ -141,7 +141,7 @@ export class AuthResolver {
     possibleUsers.forEach(user => this.mail.sendPasswordReset(user));
   }
 
-  @Mutation(() => User)
+  @Mutation(() => AuthSession)
   async authPasswordResetConfirmation(@Args('data') args: AuthPasswordResetConfirmationInput) {
     let tokenPayload: JwtPayload;
     try {
@@ -251,6 +251,8 @@ export class AuthResolver {
       data: { password: hashedPassword },
       select: { id: true },
     });
+
+    return "Password was changed";
   }
 
   private async hashPassword(password: string) {

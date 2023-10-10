@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AccountInfo {
+  avatar: FileUpload
+  createdAt: DateTime!
+  email: String!
+  id: String!
+  username: String
+}
+
 input AuthExchangeTokenInput {
   rememberMe: Boolean!
 }
@@ -132,7 +140,7 @@ scalar JSON
 
 type Mutation {
   authPasswordChange(data: AuthPasswordChangeInput!): String!
-  authPasswordResetConfirmation(data: AuthPasswordResetConfirmationInput!): User!
+  authPasswordResetConfirmation(data: AuthPasswordResetConfirmationInput!): AuthSession!
   authRegister(data: AuthRegisterInput!): AuthSession!
   create(data: BookCreateInput!): Book!
   delete(id: String!): Book!
@@ -180,8 +188,8 @@ type PostMinAggregate {
 }
 
 type Query {
-  accountInfo: User!
-  authExchangeToken(data: AuthExchangeTokenInput!): User!
+  accountInfo: AccountInfo!
+  authExchangeToken(data: AuthExchangeTokenInput!): AuthSession!
   authLogin(data: AuthLoginInput!): AuthSession!
   authPasswordResetRequest(data: AuthPasswordResetRequestInput!): String!
   find(bookId: String!): Book!

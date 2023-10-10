@@ -13,7 +13,6 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver } from "@nestjs/apollo";
 import { IContext } from "./features/graphql/models";
 import { BookModule } from "./features/book/book.module";
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
 @Module({
   imports: [
@@ -23,32 +22,6 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
       inject: [ConfigService],
       useFactory: (config: ConfigService) => config.throttle,
     }),
-    // GraphQLModule.forRoot({
-    //   driver: ApolloDriver,
-    //   autoSchemaFile: "./apps/api/src/schema.graphql",
-    //   // useFactory: async (
-    //   //
-    //   //   configService: ConfigService,
-    //   //   //schemaMergerService: SchemaMergerService
-    //   // ) => {
-    //   //   //const { schema, plugins } = await schemaMergerService.mergeSchemas();
-    //   //
-    //   //   return {
-    //   //     //schema,
-    //   //     //plugins,
-    //   //     installSubscriptionHandlers: true,
-    //   //     buildSchemaOptions: {
-    //   //     },
-    //   //     sortSchema: true,
-    //   //     debug: true,
-    //   //     playground: true,
-    //   //     csrfPrevention: true,
-    //   //     context: ({ req }: {req: any}) => ({ req }),
-    //   //
-    //   //   },
-    //   inject: [ConfigService,],
-    //   imports: [PrismaModule, ConfigModule],
-    // }),
     GraphQLModule.forRootAsync({
       driver: ApolloDriver,
       useFactory: async (config: ConfigService) => {
