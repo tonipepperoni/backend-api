@@ -14,10 +14,17 @@ export const environment: EnvironmentBase = {
   publicRegistration: true,
   cors: { credentials: true, origin: true },
   graphql: {
+    autoSchemaFile: "./apps/api/src/schema.graphql",
+    sortSchema: true,
     subscriptions: true,
     sandbox: true,
     introspection: true,
     csrfPrevention: true,
+    playground: true,
+    debug: true,
+    allowBatchedHttpRequests: true,
+    cache: "bounded",
+    installSubscriptionHandlers: true,
     uploads: {
       maxFileSize: 20_000_000, // 20 MB
       maxFiles: 5,

@@ -24,9 +24,11 @@
     "@casl/ability": "~6.5.0",
     "@casl/prisma": "~1.4.1",
     "@graphql-tools/merge": "^9.0.0",
+    "@graphql-tools/schema": "^10.0.0",
     "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/apollo": "^12.0.7",
     "@nestjs/common": "^10.2.4",
+    "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.2.4",
     "@nestjs/graphql": "^12.0.8",
     "@nestjs/jwt": "^10.1.1",
@@ -43,9 +45,10 @@
     "class-validator": "^0.14.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "graphql": "~16.8.0",
+    "graphql": "~16.8.1",
     "graphql-subscriptions": "^2.0.0",
     "graphql-tag": "^2.12.6",
+    "graphql-tools": "^9.0.0",
     "graphql-type-json": "^0.3.2",
     "graphql-upload": "15.0.2",
     "graphql-ws": "^5.14.0",
@@ -162,6 +165,9 @@
     "typescript": "5.1.6",
     "webpack": "5.88.2",
     "zone.js": "~0.13.1"
+  },
+  "ts-gql": {
+    "schema": "./apps/api/src/schema.graphql"
   },
   "overrides": {
     "@casl/angular": {

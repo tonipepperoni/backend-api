@@ -5,15 +5,14 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Throttle } from '@nestjs/throttler';
 import { ApiError } from '@zen/common';
 import { CurrentUser, JwtPayload, RequestUser, RolesGuard } from '@zen/nest-auth';
-import gql from 'graphql-tag';
 import { bcrypt, bcryptVerify } from 'hash-wasm';
 
-import { AuthService } from '../../auth';
-import { ConfigService } from '../../config';
-import { JwtService } from '../../jwt';
-import { MailService } from '../../mail';
-import { PrismaService } from '../../prisma';
-import { GqlThrottlerGuard } from '../gql-throttler.guard';
+import { AuthService } from './index';
+import { ConfigService } from '../config';
+import { JwtService } from '../jwt';
+import { MailService } from '../mail';
+import { PrismaService } from '../prisma';
+import { GqlThrottlerGuard } from '../graphql/gql-throttler.guard';
 import {
   AccountInfo,
   AuthExchangeTokenInput,
@@ -22,84 +21,13 @@ import {
   AuthPasswordResetConfirmationInput,
   AuthPasswordResetRequestInput,
   AuthRegisterInput,
-} from '../models';
+} from '../graphql/models';
+import {User} from "../prisma/generated";
+import { AuthSession } from "./models/auth-session";
 
 const logger = new Logger('AuthResolver');
 
-export const typeDefs = gql`
-  extend type Query {
-    authLogin(data: AuthLoginInput!): AuthSession!
-    authExchangeToken(data: AuthExchangeTokenInput): AuthSession!
-    authPasswordResetRequest(data: AuthPasswordResetRequestInput!): Boolean
-    accountInfo: AccountInfo!
-  }
-
-  extend type Mutation {
-    authPasswordChange(data: AuthPasswordChangeInput!): Boolean
-    authPasswordResetConfirmation(data: AuthPasswordResetConfirmationInput!): AuthSession!
-    authRegister(data: AuthRegisterInput!): AuthSession!
-  }
-
-  type AuthSession {
-    userId: String! # Change to Int! or String! respective to the typeof User['id']
-    token: String!
-    roles: [String!]!
-    rememberMe: Boolean!
-    expiresIn: Int!
-    rules: [Json!]!
-    email: String!
-    username: String!
-  }
-
-  type GoogleProfile {
-    name: String
-    given_name: String
-    family_name: String
-    locale: String
-    email: String
-    picture: String
-  }
-
-  type AccountInfo {
-    id: String!
-    username: String!
-    email: String
-    avatar: FileUpload
-    createdAt: DateTime!
-  }
-
-  input AuthLoginInput {
-    username: String!
-    password: String!
-    rememberMe: Boolean!
-  }
-
-  input AuthExchangeTokenInput {
-    rememberMe: Boolean!
-  }
-
-  input AuthPasswordChangeInput {
-    oldPassword: String!
-    newPassword: String!
-  }
-
-  input AuthPasswordResetConfirmationInput {
-    newPassword: String!
-    token: String!
-  }
-
-  input AuthPasswordResetRequestInput {
-    emailOrUsername: String!
-  }
-
-  input AuthRegisterInput {
-    username: String!
-    email: String!
-    password: String!
-  }
-`;
-
-@Resolver()
+@Resolver((of: any) => User)
 @UseGuards(GqlThrottlerGuard)
 @Throttle(100, 100)
 export class AuthResolver {
@@ -111,7 +39,7 @@ export class AuthResolver {
     private readonly prisma: PrismaService
   ) {}
 
-  @Query()
+  @Query(() => AuthSession)
   async authLogin(@Args('data') args: AuthLoginInput) {
     const user = await this.prisma.user.findFirst({
       where: {
@@ -140,7 +68,7 @@ export class AuthResolver {
     return this.auth.getAuthSession(user, args.rememberMe);
   }
 
-  @Query()
+  @Query(() => AccountInfo)
   @UseGuards(RolesGuard())
   async accountInfo(@CurrentUser() reqUser: RequestUser) {
     console.log('req')
@@ -166,7 +94,7 @@ export class AuthResolver {
     } satisfies AccountInfo;
   }
 
-  @Query()
+  @Query(() => AuthSession)
   @UseGuards(RolesGuard())
   async authExchangeToken(
     @CurrentUser() reqUser: RequestUser,
@@ -184,7 +112,7 @@ export class AuthResolver {
     }
   }
 
-  @Query()
+  @Query(() => String)
   async authPasswordResetRequest(@Args('data') args: AuthPasswordResetRequestInput) {
     const possibleUsers = await this.prisma.user.findMany({
       where: {
@@ -213,7 +141,7 @@ export class AuthResolver {
     possibleUsers.forEach(user => this.mail.sendPasswordReset(user));
   }
 
-  @Mutation()
+  @Mutation(() => AuthSession)
   async authPasswordResetConfirmation(@Args('data') args: AuthPasswordResetConfirmationInput) {
     let tokenPayload: JwtPayload;
     try {
@@ -239,7 +167,7 @@ export class AuthResolver {
     return this.auth.getAuthSession(updatedUser);
   }
 
-  @Mutation()
+  @Mutation(() => AuthSession)
   async authRegister(@Args('data') args: AuthRegisterInput) {
     if (!this.config.publicRegistration)
       throw new UnauthorizedException('No public registrations allowed');
@@ -294,7 +222,7 @@ export class AuthResolver {
     return this.auth.getAuthSession(user);
   }
 
-  @Mutation()
+  @Mutation(() => String)
   @UseGuards(RolesGuard())
   async authPasswordChange(
     @Args('data') args: AuthPasswordChangeInput,
@@ -323,6 +251,8 @@ export class AuthResolver {
       data: { password: hashedPassword },
       select: { id: true },
     });
+
+    return "Password was changed";
   }
 
   private async hashPassword(password: string) {
