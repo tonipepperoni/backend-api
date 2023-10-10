@@ -2,11 +2,64 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AuthExchangeTokenInput {
+  rememberMe: Boolean!
+}
+
+input AuthLoginInput {
+  password: String!
+  rememberMe: Boolean!
+  username: String!
+}
+
+input AuthPasswordChangeInput {
+  newPassword: String!
+  oldPassword: String!
+}
+
+input AuthPasswordResetConfirmationInput {
+  newPassword: String!
+  token: String!
+}
+
+input AuthPasswordResetRequestInput {
+  emailOrUsername: String!
+}
+
+input AuthRegisterInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+type AuthSession {
+  email: String!
+  expiresIn: Float!
+  rememberMe: Boolean!
+  roles: [String!]!
+  rules: [String!]!
+  token: String!
+  userId: String!
+  username: String!
+}
+
+type Book {
+  content: JSON
+  id: ID!
+  title: String!
+}
+
 type BookCountAggregate {
+  _all: Int!
+  content: Int!
   id: Int!
   title: Int!
-  content: Int!
-  _all: Int!
+}
+
+input BookCreateInput {
+  content: JSON
+  id: String
+  title: String!
 }
 
 type BookMaxAggregate {
@@ -19,36 +72,10 @@ type BookMinAggregate {
   title: String
 }
 
-type Book {
-  id: ID!
-  title: String!
+input BookUpdateInput {
   content: JSON
-}
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
-type FileUploadCountAggregate {
-  id: Int!
-  type: Int!
-  filePathUrl: Int!
-  thumbnailPathUrl: Int!
-  createdAt: Int!
-  updatedAt: Int!
-  authorId: Int!
-  _all: Int!
-}
-
-type FileUploadMaxAggregate {
-  id: String
-  type: String
-  filePathUrl: String
-  thumbnailPathUrl: String
-  createdAt: DateTime
-  updatedAt: DateTime
-  authorId: String
+  id: StringFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
 }
 
 """
@@ -56,175 +83,159 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type FileUploadMinAggregate {
-  id: String
-  type: String
-  filePathUrl: String
-  thumbnailPathUrl: String
-  createdAt: DateTime
-  updatedAt: DateTime
-  authorId: String
-}
-
 type FileUpload {
-  id: ID!
-  type: String!
-  filePathUrl: String!
-  thumbnailPathUrl: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  authorId: String!
   author: User
+  authorId: String!
+  createdAt: DateTime!
+  filePathUrl: String!
+  id: ID!
+  thumbnailPathUrl: String
+  type: String!
+  updatedAt: DateTime!
 }
 
-type PostCountAggregate {
-  id: Int!
-  title: Int!
-  content: Int!
-  published: Int!
-  createdAt: Int!
-  updatedAt: Int!
-  authorId: Int!
+type FileUploadCountAggregate {
   _all: Int!
+  authorId: Int!
+  createdAt: Int!
+  filePathUrl: Int!
+  id: Int!
+  thumbnailPathUrl: Int!
+  type: Int!
+  updatedAt: Int!
 }
 
-type PostMaxAggregate {
-  id: String
-  title: String
-  published: Boolean
-  createdAt: DateTime
-  updatedAt: DateTime
+type FileUploadMaxAggregate {
   authorId: String
+  createdAt: DateTime
+  filePathUrl: String
+  id: String
+  thumbnailPathUrl: String
+  type: String
+  updatedAt: DateTime
 }
 
-type PostMinAggregate {
-  id: String
-  title: String
-  published: Boolean
-  createdAt: DateTime
-  updatedAt: DateTime
+type FileUploadMinAggregate {
   authorId: String
+  createdAt: DateTime
+  filePathUrl: String
+  id: String
+  thumbnailPathUrl: String
+  type: String
+  updatedAt: DateTime
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Mutation {
+  authPasswordChange(data: AuthPasswordChangeInput!): String!
+  authPasswordResetConfirmation(data: AuthPasswordResetConfirmationInput!): User!
+  authRegister(data: AuthRegisterInput!): AuthSession!
+  create(data: BookCreateInput!): Book!
+  delete(id: String!): Book!
+  update(data: BookUpdateInput!, id: String!): Book!
 }
 
 type Post {
-  id: ID!
-  title: String!
-  content: JSON
-  published: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  authorId: String!
   author: User!
+  authorId: String!
+  content: JSON
+  createdAt: DateTime!
+  id: ID!
+  published: Boolean!
+  title: String!
+  updatedAt: DateTime!
 }
 
-type UserCountAggregate {
-  id: Int!
-  createdAt: Int!
-  username: Int!
-  password: Int!
-  email: Int!
-  roles: Int!
-  googleId: Int!
-  googleProfile: Int!
+type PostCountAggregate {
   _all: Int!
+  authorId: Int!
+  content: Int!
+  createdAt: Int!
+  id: Int!
+  published: Int!
+  title: Int!
+  updatedAt: Int!
+}
+
+type PostMaxAggregate {
+  authorId: String
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String
+  updatedAt: DateTime
+}
+
+type PostMinAggregate {
+  authorId: String
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String
+  updatedAt: DateTime
+}
+
+type Query {
+  accountInfo: User!
+  authExchangeToken(data: AuthExchangeTokenInput!): User!
+  authLogin(data: AuthLoginInput!): AuthSession!
+  authPasswordResetRequest(data: AuthPasswordResetRequestInput!): String!
+  find(bookId: String!): Book!
+  getAll: [Book!]!
+}
+
+input StringFieldUpdateOperationsInput {
+  set: String
+}
+
+type User {
+  Post: [Post!]
+  _count: UserCount!
+  avatar: FileUpload
+  createdAt: DateTime!
+  email: String!
+  googleId: String
+  googleProfile: JSON
+  id: ID!
+  password: String
+  roles: [String!]
+  username: String
 }
 
 type UserCount {
   Post: Int!
 }
 
+type UserCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  email: Int!
+  googleId: Int!
+  googleProfile: Int!
+  id: Int!
+  password: Int!
+  roles: Int!
+  username: Int!
+}
+
 type UserMaxAggregate {
-  id: String
   createdAt: DateTime
-  username: String
-  password: String
   email: String
   googleId: String
+  id: String
+  password: String
+  username: String
 }
 
 type UserMinAggregate {
-  id: String
   createdAt: DateTime
-  username: String
-  password: String
   email: String
   googleId: String
-}
-
-type User {
-  id: ID!
-  createdAt: DateTime!
-  username: String
-  password: String
-  email: String!
-  roles: [String!]
-  googleId: String
-  googleProfile: JSON
-  Post: [Post!]
-  avatar: FileUpload
-  _count: UserCount!
-}
-
-type Query {
-  authLogin(data: AuthLoginInput!): User!
-  accountInfo: User!
-  authExchangeToken(data: AuthExchangeTokenInput!): User!
-  authPasswordResetRequest(data: AuthPasswordResetRequestInput!): String!
-  find(bookId: String!): Book!
-  getAll: [Book!]!
-}
-
-input AuthLoginInput {
-  username: String!
-  password: String!
-  rememberMe: Boolean!
-}
-
-input AuthExchangeTokenInput {
-  rememberMe: Boolean!
-}
-
-input AuthPasswordResetRequestInput {
-  emailOrUsername: String!
-}
-
-type Mutation {
-  authPasswordResetConfirmation(data: AuthPasswordResetConfirmationInput!): User!
-  authRegister(data: AuthRegisterInput!): User!
-  authPasswordChange(data: AuthPasswordChangeInput!): String!
-  create(data: BookCreateInput!): Book!
-  update(data: BookUpdateInput!, id: String!): Book!
-  delete(id: String!): Book!
-}
-
-input AuthPasswordResetConfirmationInput {
-  newPassword: String!
-  token: String!
-}
-
-input AuthRegisterInput {
-  username: String!
-  email: String!
-  password: String!
-}
-
-input AuthPasswordChangeInput {
-  oldPassword: String!
-  newPassword: String!
-}
-
-input BookCreateInput {
   id: String
-  title: String!
-  content: JSON
-}
-
-input BookUpdateInput {
-  id: StringFieldUpdateOperationsInput
-  title: StringFieldUpdateOperationsInput
-  content: JSON
-}
-
-input StringFieldUpdateOperationsInput {
-  set: String
+  password: String
+  username: String
 }

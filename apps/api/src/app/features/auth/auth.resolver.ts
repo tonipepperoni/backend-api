@@ -23,10 +23,11 @@ import {
   AuthRegisterInput,
 } from '../graphql/models';
 import {User} from "../prisma/generated";
+import { AuthSession } from "./models/auth-session";
 
 const logger = new Logger('AuthResolver');
 
-@Resolver()
+@Resolver((of: any) => User)
 @UseGuards(GqlThrottlerGuard)
 @Throttle(100, 100)
 export class AuthResolver {
@@ -38,7 +39,7 @@ export class AuthResolver {
     private readonly prisma: PrismaService
   ) {}
 
-  @Query(() => User)
+  @Query(() => AuthSession)
   async authLogin(@Args('data') args: AuthLoginInput) {
     const user = await this.prisma.user.findFirst({
       where: {
@@ -166,7 +167,7 @@ export class AuthResolver {
     return this.auth.getAuthSession(updatedUser);
   }
 
-  @Mutation(() => User)
+  @Mutation(() => AuthSession)
   async authRegister(@Args('data') args: AuthRegisterInput) {
     if (!this.config.publicRegistration)
       throw new UnauthorizedException('No public registrations allowed');
