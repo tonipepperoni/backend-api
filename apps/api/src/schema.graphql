@@ -166,14 +166,51 @@ type User {
 }
 
 type Query {
+  authLogin(data: AuthLoginInput!): User!
+  accountInfo: User!
+  authExchangeToken(data: AuthExchangeTokenInput!): User!
+  authPasswordResetRequest(data: AuthPasswordResetRequestInput!): String!
   find(bookId: String!): Book!
   getAll: [Book!]!
 }
 
+input AuthLoginInput {
+  username: String!
+  password: String!
+  rememberMe: Boolean!
+}
+
+input AuthExchangeTokenInput {
+  rememberMe: Boolean!
+}
+
+input AuthPasswordResetRequestInput {
+  emailOrUsername: String!
+}
+
 type Mutation {
+  authPasswordResetConfirmation(data: AuthPasswordResetConfirmationInput!): User!
+  authRegister(data: AuthRegisterInput!): User!
+  authPasswordChange(data: AuthPasswordChangeInput!): String!
   create(data: BookCreateInput!): Book!
   update(data: BookUpdateInput!, id: String!): Book!
   delete(id: String!): Book!
+}
+
+input AuthPasswordResetConfirmationInput {
+  newPassword: String!
+  token: String!
+}
+
+input AuthRegisterInput {
+  username: String!
+  email: String!
+  password: String!
+}
+
+input AuthPasswordChangeInput {
+  oldPassword: String!
+  newPassword: String!
 }
 
 input BookCreateInput {
