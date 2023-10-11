@@ -5,9 +5,8 @@ import {
   FileUpload,
   Post,
   User,
-} from '../../prisma/generated';
+} from '../../prisma';
 
-// @ts-ignore
 export type PrismaSubjects = Subjects<{
   FileUpload: FileUpload;
   Post: Post;
