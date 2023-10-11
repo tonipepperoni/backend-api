@@ -1,0 +1,63 @@
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {PrismaService} from '../../services/prisma.service';
+import { {{ pascalCase modelName }}CreateInput} from "../../api/models/{{ kebabCase modelName }}/inputs/{{ kebabCase modelName }}-create.input";
+import { {{ pascalCase modelName }}UpdateInput} from "../../api/models/{{ kebabCase modelName }}/inputs/{{ kebabCase modelName }}-update.input";
+
+@Injectable()
+export class {{ pascalCase modelName }}Service {
+constructor(
+private readonly prisma: PrismaService,
+
+  ) {}
+  async create{{ pascalCase modelName }}(payload: {{ pascalCase modelName }}CreateInput): Promise<any> {
+  try {
+    const res = await this.prisma.{{ camelCase modelName }}.create({
+      data: {
+    ...payload
+      },
+      });
+      } catch (e) {
+    throw new Error(e);
+      }
+  }
+
+  async update{{ pascalCase modelName }}({{ camelCase modelName }}Id: string, newUserData: {{ pascalCase modelName }}UpdateInput) {
+const {{ camelCase modelName }} = await this.prisma.{{ camelCase modelName }}.findUnique({ where: { id: {{ camelCase modelName }}Id } });
+
+    if (!{{ camelCase modelName }}) {
+    throw new NotFoundException(`No ${{{ camelCase modelName }}} found for id `);
+    }
+    return this.prisma.{{ camelCase modelName }}.update({
+    data: newUserData,
+  where: {
+  id: {{ camelCase modelName }}Id,
+    },
+  });
+}
+
+async delete{{ pascalCase modelName }}({{ camelCase modelName }}Id: string) {
+const {{ camelCase modelName }} = await this.prisma.{{ camelCase modelName }}.findUnique({ where: { id: {{ camelCase modelName }}Id } });
+
+    if (!{{ camelCase modelName }}) {
+    throw new NotFoundException(`No ${{{ camelCase modelName }}} found for id `);
+    }
+    return this.prisma.{{ camelCase modelName }}.delete({
+    where: {
+    id: {{ camelCase modelName }}Id,
+    },
+  });
+  }
+
+  async find{{ pascalCase modelName }}({{ camelCase modelName }}Id: string) {
+    const {{ camelCase modelName }} = await this.prisma.{{ camelCase modelName }}.findUnique({ where: { id: {{ camelCase modelName }}Id } });
+
+    if (!{{ camelCase modelName }}) {
+    throw new NotFoundException(`No ${{{ camelCase modelName }}} found for id `);
+    }
+    return this.prisma.{{ camelCase modelName }}.findUnique({
+    where: {
+    id: {{ camelCase modelName }}Id,
+    },
+  });
+}
+  }

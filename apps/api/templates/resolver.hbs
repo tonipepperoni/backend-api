@@ -1,0 +1,35 @@
+import {Resolver, Mutation, Args, Parent, ResolveField, Query} from '@nestjs/graphql';
+import { {{ pascalCase modelName }}CreateInput} from "../../api/models/{{ kebabCase modelName }}/inputs/{{ kebabCase modelName }}-create.input";
+import { {{ pascalCase modelName }} } from "../../api/models/{{ kebabCase modelName }}/entity/{{ kebabCase modelName }}.model";
+import { {{ pascalCase modelName }}UpdateInput} from "../../api/models/{{ kebabCase modelName }}/inputs/{{ kebabCase modelName }}-update.input";
+import { {{ pascalCase modelName }}Service} from "../models/{{ kebabCase modelName }}/services/{{ kebabCase modelName }}-service";
+
+@Resolver((of: any) => {{ pascalCase modelName }})
+export class {{ pascalCase modelName }}Resolver {
+constructor(private readonly service: {{ pascalCase modelName }}Service) {}
+
+@Mutation(returns => {{ pascalCase modelName }})
+async create{{ pascalCase modelName }}(@Args('data') data: {{ pascalCase modelName }}CreateInput) {
+const {{ camelCase modelName }}Created = await this.service.create{{ pascalCase modelName }}(data);
+return {{ camelCase modelName }}Created;
+}
+
+@Mutation(returns => {{ pascalCase modelName }})
+async update{{ pascalCase modelName }}(@Args('data') data: {{ pascalCase modelName }}UpdateInput, @Args('id'){{ camelCase modelName }}Id:string) {
+const {{ camelCase modelName }}Updated = await this.service.update{{ pascalCase modelName }}({{ camelCase modelName }}Id, data);
+return {{ camelCase modelName }}Updated;
+}
+
+@Mutation((returns) => {{ pascalCase modelName }})
+async delete{{ pascalCase modelName }}(@Args('id') {{ camelCase modelName }}Id: string) {
+const {{ camelCase modelName }}Deleted = await this.service.delete{{ pascalCase modelName }}({{ camelCase modelName }}Id);
+return {{ camelCase modelName }}Deleted;
+}
+
+@Query((returns) => {{ pascalCase modelName }})
+async find{{ pascalCase modelName }}(@Args() {{ camelCase modelName }}Id: string) {
+const {{ camelCase modelName }}Found= await this.service.find{{ pascalCase modelName }}({{ camelCase modelName }}Id);
+return {{ camelCase modelName }}Found
+}
+
+}
