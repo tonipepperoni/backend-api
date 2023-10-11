@@ -17,7 +17,7 @@ import {
   DeleteOneUserArgs,
   DeleteManyUserArgs,
 } from "../prisma/generated";
-import {RulesModel} from "./models/rules.model";
+import JSON from "graphql-type-json";
 
 @Resolver((of: any) => User)
 @UseGuards(RolesGuard('Prisma'))
@@ -33,7 +33,7 @@ export class UserResolver {
     return null;
   }
 
-  @ResolveField(() => RulesModel, { nullable: true })
+  @ResolveField(() => JSON, { nullable: true })
   async rules(@Parent() parent: User) {
     const ability = await this.auth.createAbility(parent);
     return ability.rules;

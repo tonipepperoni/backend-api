@@ -1,5 +1,5 @@
-import { User } from '../../prisma';
 import {Field, ObjectType} from "@nestjs/graphql";
+import JSON from "graphql-type-json";
 
 @ObjectType("AuthSession")
 export class AuthSession {
@@ -18,8 +18,8 @@ export class AuthSession {
   @Field()
   expiresIn: number;
 
-  @Field(() => [String])
-  rules: any;//object[];
+  @Field(() => JSON)
+  rules: any;
 
   @Field()
   email: string;

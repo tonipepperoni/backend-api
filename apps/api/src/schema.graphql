@@ -45,27 +45,10 @@ type AuthSession {
   expiresIn: Float!
   rememberMe: Boolean!
   roles: [String!]!
-  rules: [String!]!
+  rules: JSON!
   token: String!
   userId: String!
   username: String!
-}
-
-type BookCountAggregate {
-  _all: Int!
-  content: Int!
-  id: Int!
-  title: Int!
-}
-
-type BookMaxAggregate {
-  id: String
-  title: String
-}
-
-type BookMinAggregate {
-  id: String
-  title: String
 }
 
 input BoolFieldUpdateOperationsInput {
@@ -590,11 +573,6 @@ enum QueryMode {
   insensitive
 }
 
-type RulesModel {
-  action: [String!]
-  subject: String
-}
-
 enum SortOrder {
   asc
   desc
@@ -660,7 +638,7 @@ type User {
   id: ID!
   password: String
   roles: [String!]
-  rules: RulesModel
+  rules: JSON
   username: String
 }
 
