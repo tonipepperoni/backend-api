@@ -16,7 +16,7 @@ export class AppCaslFactory extends CaslFactory {
     if (user.roles.includes('Super')) {
       can('manage', 'all');
     } else if (user.roles.includes('User')){
-      can(['create',  'read'], 'all');
+      can(['create', 'read'], 'all');
       can('update', 'Post', {authorId:user.id});
       can('delete', 'Post', {authorId:user.id});
 
