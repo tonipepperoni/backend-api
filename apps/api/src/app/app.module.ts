@@ -12,8 +12,8 @@ import { ImageUploadModule } from "./features/image-upload";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver } from "@nestjs/apollo";
 import { IContext } from "./features/graphql/models";
-import { BookModule } from "./features/book/book.module";
 import {PostModule} from "./features/post/post.module";
+import {UserModule} from "./features/user/user.module";
 
 @Module({
   imports: [
@@ -61,8 +61,8 @@ import {PostModule} from "./features/post/post.module";
     MailModule,
     PrismaModule,
     ImageUploadModule,
-    BookModule,
     PostModule,
+    UserModule,
   ],
 })
 export class AppModule implements NestModule {

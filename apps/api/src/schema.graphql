@@ -51,23 +51,11 @@ type AuthSession {
   username: String!
 }
 
-type Book {
-  content: JSON
-  id: ID!
-  title: String!
-}
-
 type BookCountAggregate {
   _all: Int!
   content: Int!
   id: Int!
   title: Int!
-}
-
-input BookCreateInput {
-  content: JSON
-  id: String
-  title: String!
 }
 
 type BookMaxAggregate {
@@ -78,12 +66,6 @@ type BookMaxAggregate {
 type BookMinAggregate {
   id: String
   title: String
-}
-
-input BookUpdateInput {
-  content: JSON
-  id: StringFieldUpdateOperationsInput
-  title: StringFieldUpdateOperationsInput
 }
 
 input BoolFieldUpdateOperationsInput {
@@ -291,15 +273,18 @@ type Mutation {
   authPasswordChange(data: AuthPasswordChangeInput!): String!
   authPasswordResetConfirmation(data: AuthPasswordResetConfirmationInput!): AuthSession!
   authRegister(data: AuthRegisterInput!): AuthSession!
-  create(data: BookCreateInput!): Book!
   createOnePost(data: PostCreateInput!): Post!
-  delete(id: String!): Book!
+  createOneUser(data: UserCreateInput!): User!
   deleteManyPost(where: PostWhereInput): String!
+  deleteManyUser(where: UserWhereInput): String!
   deleteOnePost(where: PostWhereUniqueInput!): String!
-  update(data: BookUpdateInput!, id: String!): Book!
+  deleteOneUser(where: UserWhereUniqueInput!): String!
   updateManyPost(data: PostUpdateManyMutationInput!, where: PostWhereInput): [Post!]!
+  updateManyUser(data: UserUpdateManyMutationInput!, where: UserWhereInput): [User!]!
   updateOnePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post!
+  updateOneUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User!
   upsertOnePost(create: PostCreateInput!, update: PostUpdateInput!, where: PostWhereUniqueInput!): [Post!]!
+  upsertOneUser(create: UserCreateInput!, update: UserUpdateInput!, where: UserWhereUniqueInput!): User!
 }
 
 input NestedBoolFilter {
@@ -389,6 +374,41 @@ input PostCreateInput {
   updatedAt: DateTime
 }
 
+input PostCreateManyAuthorInput {
+  content: JSON
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input PostCreateManyAuthorInputEnvelope {
+  data: [PostCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input PostCreateNestedManyWithoutAuthorInput {
+  connect: [PostWhereUniqueInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+  create: [PostCreateWithoutAuthorInput!]
+  createMany: PostCreateManyAuthorInputEnvelope
+}
+
+input PostCreateOrConnectWithoutAuthorInput {
+  create: PostCreateWithoutAuthorInput!
+  where: PostWhereUniqueInput!
+}
+
+input PostCreateWithoutAuthorInput {
+  content: JSON
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
 input PostListRelationFilter {
   every: PostWhereInput
   none: PostWhereInput
@@ -451,6 +471,19 @@ enum PostScalarFieldEnum {
   updatedAt
 }
 
+input PostScalarWhereInput {
+  AND: [PostScalarWhereInput!]
+  NOT: [PostScalarWhereInput!]
+  OR: [PostScalarWhereInput!]
+  authorId: StringFilter
+  content: JsonNullableFilter
+  createdAt: DateTimeFilter
+  id: StringFilter
+  published: BoolFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
+}
+
 input PostUpdateInput {
   author: UserUpdateOneRequiredWithoutPostNestedInput
   content: JSON
@@ -468,6 +501,45 @@ input PostUpdateManyMutationInput {
   published: BoolFieldUpdateOperationsInput
   title: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input PostUpdateManyWithWhereWithoutAuthorInput {
+  data: PostUpdateManyMutationInput!
+  where: PostScalarWhereInput!
+}
+
+input PostUpdateManyWithoutAuthorNestedInput {
+  connect: [PostWhereUniqueInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+  create: [PostCreateWithoutAuthorInput!]
+  createMany: PostCreateManyAuthorInputEnvelope
+  delete: [PostWhereUniqueInput!]
+  deleteMany: [PostScalarWhereInput!]
+  disconnect: [PostWhereUniqueInput!]
+  set: [PostWhereUniqueInput!]
+  update: [PostUpdateWithWhereUniqueWithoutAuthorInput!]
+  updateMany: [PostUpdateManyWithWhereWithoutAuthorInput!]
+  upsert: [PostUpsertWithWhereUniqueWithoutAuthorInput!]
+}
+
+input PostUpdateWithWhereUniqueWithoutAuthorInput {
+  data: PostUpdateWithoutAuthorInput!
+  where: PostWhereUniqueInput!
+}
+
+input PostUpdateWithoutAuthorInput {
+  content: JSON
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  published: BoolFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input PostUpsertWithWhereUniqueWithoutAuthorInput {
+  create: PostCreateWithoutAuthorInput!
+  update: PostUpdateWithoutAuthorInput!
+  where: PostWhereUniqueInput!
 }
 
 input PostWhereInput {
@@ -503,17 +575,24 @@ type Query {
   authExchangeToken(data: AuthExchangeTokenInput!): AuthSession!
   authLogin(data: AuthLoginInput!): AuthSession!
   authPasswordResetRequest(data: AuthPasswordResetRequestInput!): String!
-  find(bookId: String!): Book!
   findFirstPost(cursor: PostWhereUniqueInput, distinct: [PostScalarFieldEnum!], orderBy: [PostOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: PostWhereInput): Post!
+  findFirstUser(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: UserWhereInput): User!
   findManyPost(cursor: PostWhereUniqueInput, distinct: [PostScalarFieldEnum!], orderBy: [PostOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: PostWhereInput): [Post!]!
   findManyPostCount(cursor: PostWhereUniqueInput, distinct: [PostScalarFieldEnum!], orderBy: [PostOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: PostWhereInput): Float!
+  findManyUser(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
+  findManyUserCount(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: UserWhereInput): Float!
   findUniquePost(where: PostWhereUniqueInput!): Post!
-  getAll: [Book!]!
+  findUniqueUser(where: UserWhereUniqueInput!): User!
 }
 
 enum QueryMode {
   default
   insensitive
+}
+
+type RulesModel {
+  action: [String!]
+  subject: String
 }
 
 enum SortOrder {
@@ -581,6 +660,7 @@ type User {
   id: ID!
   password: String
   roles: [String!]
+  rules: RulesModel
   username: String
 }
 
@@ -598,6 +678,19 @@ type UserCountAggregate {
   password: Int!
   roles: Int!
   username: Int!
+}
+
+input UserCreateInput {
+  Post: PostCreateNestedManyWithoutAuthorInput
+  avatar: FileUploadCreateNestedOneWithoutAuthorInput
+  createdAt: DateTime
+  email: String!
+  googleId: String
+  googleProfile: JSON
+  id: String
+  password: String
+  roles: UserCreaterolesInput
+  username: String
 }
 
 input UserCreateNestedOneWithoutPostInput {
@@ -682,6 +775,41 @@ input UserOrderByWithRelationAndSearchRelevanceInput {
 input UserRelationFilter {
   is: UserWhereInput
   isNot: UserWhereInput
+}
+
+enum UserScalarFieldEnum {
+  createdAt
+  email
+  googleId
+  googleProfile
+  id
+  password
+  roles
+  username
+}
+
+input UserUpdateInput {
+  Post: PostUpdateManyWithoutAuthorNestedInput
+  avatar: FileUploadUpdateOneWithoutAuthorNestedInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  googleId: NullableStringFieldUpdateOperationsInput
+  googleProfile: JSON
+  id: StringFieldUpdateOperationsInput
+  password: NullableStringFieldUpdateOperationsInput
+  roles: UserUpdaterolesInput
+  username: NullableStringFieldUpdateOperationsInput
+}
+
+input UserUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  googleId: NullableStringFieldUpdateOperationsInput
+  googleProfile: JSON
+  id: StringFieldUpdateOperationsInput
+  password: NullableStringFieldUpdateOperationsInput
+  roles: UserUpdaterolesInput
+  username: NullableStringFieldUpdateOperationsInput
 }
 
 input UserUpdateOneRequiredWithoutPostNestedInput {
